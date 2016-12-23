@@ -1,0 +1,31 @@
+extend layout
+block content
+	h1= title	
+	
+	img(id="Plan", name = "Plan")
+
+	form(action="/send1", method="get")
+		div.input
+			input(type="text", name="pInfo" your information)
+		div.actions
+			input(type="submit", value="add")
+
+	script.
+		var dataHold;
+		var aapload = #{apl};
+		if(aapload == true) {
+			$.ajax({
+				type: 'POST',
+				dataType: 'JSON',
+				url: '/pl3',
+				async: false
+			}).done(function(data){
+				console.log("itworked");
+				console.log(data)
+				dataHold = data;
+				console.log(dataHold.c);
+				Plan.src=dataHold.c;
+			}).fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+		}

@@ -1,0 +1,40 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="Resources/common_layout.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+</head>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script type="text/javascript" src="Resources/login_page.js"></script>
+<body>
+<div class="jumbotron vertical-center">
+  <div class="form">
+    <form class="register-form" id="register_form" style="display: none;">
+    <div class="form-group">
+      <label for="Username">Username:</label>
+      <input type="text" class="form-control" id="Username" placeholder="Enter Name">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd" placeholder="Password">
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Email Address">
+    </div>
+       <button type="submit" class="btn btn-default">Create</button>
+       <p class="message">Already registered? <a href="#" id="sign_in_link" onclick="HideSignUp();">Sign In</a></p>
+    </form>
+    <form id="login_form">
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="email" class="form-control" id="email" placeholder="Enter email">
+    </div>
+    <div class="form-group">
+      <label for="pwd">Password:</label>
+      <input type="password" class="form-control" id="pwd" placeholder="Enter password">
+    </div>
+    <button type="submit" class="btn btn-default">login</button>
+     <p class="message">Not registered? <a href="#" id="sign_up_link" onclick="HideSignIn();">Create an account</a></p>
+  </form>
+</div>
+</div>
+<body>  

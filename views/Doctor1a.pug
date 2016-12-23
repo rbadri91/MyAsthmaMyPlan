@@ -1,0 +1,59 @@
+extend layout
+block content
+	h1= title	
+	input(type='file', accept='image/*', onchange='openFile(event)')
+
+
+	img(id="Plan", name = "Plan")
+	
+	script.
+		var dataHold;
+		var aapload = #{apl};
+		console.log(aapload);
+		if(aapload == true) {
+			$.ajax({
+				type: 'POST',
+				dataType: 'JSON',
+				url: '/pl1',
+				async: false
+			}).done(function(data){
+				console.log("itworked");
+				console.log(data)
+				dataHold = data;
+				console.log(dataHold.c);
+				Plan.src=dataHold.c;
+			}).fail(function( jqXHR, textStatus ) {
+				alert( "Request failed: " + textStatus );
+			});
+		}
+		var openFile = function(event) {
+			console.log("run openfile");
+			var input = event.target;
+			var reader = new FileReader();
+			reader.onload = function(){
+				console.log("run onload");
+				var dataURL = reader.result;
+				//loadImage(dataURL,
+				//	function(err) {
+				//		if(err) console.log(err);
+				//	},{orientation: 0});
+				console.log(dataURL);
+				$.ajax({
+					type: 'POST',
+					data: {c: dataURL},
+					dataType: 'JSON',
+					processData: 'false',
+					url: '/fr1',
+					async: false
+				}).done(function(data){
+					console.log("itworked");
+					console.log(data)
+					dataHold = data;
+					console.log(dataHold.c);
+					Plan.src=dataHold.c;
+				}).fail(function(data) {
+					console.log("fail");
+				});
+			};
+			reader.readAsDataURL(input.files[0]);
+		};

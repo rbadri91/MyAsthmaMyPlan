@@ -1,0 +1,46 @@
+doctype html
+html(lang='en')
+  head
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    link(rel='stylesheet', type='text/css', href='Resources/common_layout.css')
+    link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css')
+  script(type='text/javascript', src='https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js')
+  script(type='text/javascript', src='Resources/login_page.js')
+  body
+    .new.text-center
+      .my-row.special
+        .v-m
+          .form.center-block
+            h2 Login
+            form#register_form.register-form(style='display: none;')
+              .form-group
+                label(for='Email') Username:
+                input#Email.form-control(type='text', placeholder='Enter Name', name='Email')
+              .form-group
+                label(for='password') Password:
+                input#password.form-control(type='password', placeholder='Password', name='password')
+              .form-group
+                label(for='email') Email:
+                input#email.form-control(type='email', placeholder='Email Address')
+              .form-group
+                label.radio-inline
+                  input#Doctor(name='Doctor', type='radio', style='margin-left: -40px', value='1')
+                  | Doctor
+                label.radio-inline
+                  input#Patient(name='Patient', type='radio', style='margin-left: -40px', value='0')
+                  | Patient
+              button.btn.btn-default(type='submit') Create
+              p.message
+                | Already registered? 
+                a#sign_in_link(href='#', onclick='HideSignUp();') Sign In
+            form#login_form(action='/login', method='post')
+              .form-group
+                label(for='exampleInputEmail1') Email address
+                input#exampleInputEmail1.form-control(type='email', placeholder='Email', name='email')
+              .form-group
+                label(for='exampleInputPassword1') Password
+                input#exampleInputPassword1.form-control(type='password', placeholder='Password', name='password')
+              button.btn.btn-default(type='submit') Login
+              p.message
+                | Not registered? 
+                a#sign_up_link(href='#', onclick='HideSignIn();') Create an account

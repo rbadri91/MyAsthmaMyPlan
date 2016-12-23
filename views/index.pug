@@ -1,0 +1,26 @@
+extend layout
+block content
+
+	div(class='container')
+		div(class='jumbotron text-center')
+			span(class='fa fa-lock')
+				p
+				| Let's get started!
+				br
+				br
+				a(href='/login', class='btn btn-default')
+					span(class='fa fa-user') Login
+				a(href='/signup', class='btn btn-default')
+					span(class='fa fa-user') Sign Up
+				div(id='profile', hidden='true')
+					a(id='Profile', href='/profile', class='btn btn-default')
+						span(id="bttn", class='fa fa-user') Profile
+
+	script.
+		window.onload = function() {
+			var load = #{loaded};
+			console.log(load);
+			if(load == false)
+				document.getElementById('profile').setAttribute("hidden", true);
+			else document.getElementById('profile').removeAttribute("hidden");
+		};

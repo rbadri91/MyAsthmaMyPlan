@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<script src="https://github.com/blueimp/JavaScript-Load-Image/blob/master/js/load-image-orientation.js"></script>
+<head>
+<title>Welcome - My Asthma My Plan</title>
+<link rel="stylesheet" href="static/stylesheets/style.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<header>
+<button id="home-button" onclick="location.href='/'">My Asthma My Plan</button>
+</header>
+<div><div class="container">
+<div class="jumbotron text-center">
+<span class="fa fa-lock">
+<p></p>Let's get started!<br><br>
+<a class="btn btn-default" href="/login">
+<span class="fa fa-user">Login</span></a>
+<a class="btn btn-default" href="/signup"><span class="fa fa-user">Sign Up</span></a>
+<div id="profile" hidden="true">
+<a class="btn btn-default" id="Profile" href="/profile">
+<span class="fa fa-user" id="bttn">Profile</span></a>
+</div>
+</span>
+</div>
+</div>
+<script>
+window.onload = function() {
+	var load = false;
+	console.log(load);
+	if(load == false)
+		document.getElementById('profile').setAttribute("hidden", true);
+	else document.getElementById('profile').removeAttribute("hidden");
+};
+</script>
+</div>
+</body>
+<footer><p>This is a prototype. It will be prettier and more functional as time goes on.</p></footer>
+</html>

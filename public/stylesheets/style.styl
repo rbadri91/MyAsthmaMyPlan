@@ -1,0 +1,58 @@
+
+@import 'nib'
+
+@import url('http://fonts.googleapis.com/css?family=Quicksand')
+
+/*
+ * Nib's CSS reset
+ */
+global-reset()
+
+/*
+ * Store the main color and
+ * background color as variables
+ */
+main-color = #fa5b4d
+background-color = #faf9f0
+
+body
+  font-family 'Georgia'
+  background-color background-color
+  color #444
+  padding 0
+  height 100%
+  margin 0
+
+img
+  padding 0
+  display block
+  margin 0 auto
+  max-height 100%
+  max-width 100%
+
+header
+  font-family 'Quicksand'
+  padding 50px 10px
+  color #fff
+  font-size 25px
+  text-align center
+  background-color main-color
+  border-bottom 1px solid darken(main-color, 30%)
+  text-shadow 0px -1px 0px darken(main-color, 30%)
+  
+#home-button
+  background-color main-color
+  border none
+  font-family 'Quicksand'
+  padding 50px 10px
+  color #fff
+  font-size 25px 
+
+
+footer
+  font-size 13px 
+  display table;
+  text-align center
+  margin-left auto
+  margin-right auto
+  padding-top 150px 

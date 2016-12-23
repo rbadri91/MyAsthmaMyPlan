@@ -1,0 +1,68 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="static/common_layout.css">
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<div class="my-asthma-my-plan-page">
+
+ <div class="newcontainer">
+  <div class="my-row special">
+  <div class="v-m">
+  <div class="form center-block ">
+    <div class="row">
+      <div class="dropdown">
+    <button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
+    <span class="caret"></span></button>
+    <ul id = "dropDownUl" class="dropdown-menu">
+      <li><a href="#">Patient 1</a></li>
+      <li><a href="#">Patient 2</a></li>
+      <li><a href="#">Patient 3</a></li>
+    </ul>
+  </div>
+    </div>
+      <div class="row">
+        <div class="form-group">
+          <label  class="btn btn-default btn-file" for="FileUpload">Upload a Plan</label>
+          <input type="file"  id ="FileUpload" accept="image/*" capture="camera" value="" onchange="readFileURL(this);" style="display: none;">
+           <img id="chosenFile" src="#" style="visibility: hidden;"/>
+        </div>
+      
+      </div>
+      <div class="row">
+      <div class="col-sm-12"><button style="background-color: green" class="btn btn-default btn-sm" onclick="handleUplod(this)">Upload</button></div>
+      </div>
+      <div class="row">
+        <div class="col-sm-12"><button style="background-color: orange" class="btn btn-default btn-sm" onclick="document.location.href='/home'">Return Home</button></div>
+      </div>
+  </div>
+  </div>
+  </div>
+  </div>
+    <script type="text/javascript">
+    var imageData;
+    function handleUplod(){
+      var textFile = null;
+      var blob = new Blob([imageData], {type: "text/plain;charset=utf-8"});
+        console.log("test:",document.getElementById("patientList").innerText);  
+    };
+    function readFileURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            document.getElementById("chosenFile").style.visibility="visible";
+            reader.onload = function (e) {
+                $('#chosenFile').attr('src', e.target.result).width(150).height(150);
+                  console.log("result:",e.target.result);
+                  imageData = e.target.result;
+            };
+              console.log("data url:"+reader.readAsDataURL(input.files[0]));
+            
+        }
+    };
+$(document).ready(function () {
+ $("#dropDownUl li").on('click', function () {
+     $('#patientList').text($(this).text());
+   });
+});
+  </script>
+</div>

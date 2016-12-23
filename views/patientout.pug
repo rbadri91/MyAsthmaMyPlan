@@ -1,0 +1,9 @@
+extend layout
+block content
+	h1= title
+	form(action="/send", method="get")
+		div.input
+			input(type="text", name="pInfo" your information)
+		div.actions
+			input(type="submit", value="add")
+	p #{tex}

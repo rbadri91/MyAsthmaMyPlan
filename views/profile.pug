@@ -1,0 +1,20 @@
+extend layout
+block content
+
+	div(class="container")
+		div(class="page-header text-center")
+			h1
+				span(class="fa fa-anchor") Profile Page
+			a(href="/logout", class="btn btn-default btn-sm") Logout
+
+		div(class="row")
+
+			div(class="col-sm-6")
+				div(class="well")
+					h3
+						span(class="fa fa-user") Your Account
+
+						p
+							<strong>role</strong>: = #{usr.data.role}
+							br
+							<strong>email</strong>: = #{usr.data.email}

@@ -1,0 +1,10 @@
+extend layout
+block content
+	h1= title	
+	
+	form(action="/fr", method="get")
+		div.input
+			input(type="file", id="files", name="files", accept="image/*", onchange="openFile(event)")
+			output(id="file")
+		div.actions
+			input(type="submit", value="Submit Plan")
