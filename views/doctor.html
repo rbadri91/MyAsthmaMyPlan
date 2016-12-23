@@ -1,0 +1,37 @@
+<head>
+  <link rel="stylesheet" type="text/css" href="static/common_layout.css">
+</head>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<div class="my-asthma-my-plan-page">
+
+ <div class="newcontainer">
+  <div class="my-row special">
+  <div class="v-m">
+  <div class="form center-block ">
+    <div class="row">
+      <div class="dropdown">
+    	<button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
+    	<span class="caret"></span>
+    	</button>
+	    <ul id = "dropDownUl" class="dropdown-menu">
+	      <li><a href="#">Patient 1</a></li>
+	      <li><a href="#">Patient 2</a></li>
+	      <li><a href="#">Patient 3</a></li>
+	    </ul>
+  	  </div>
+    </div>
+    <div class="page-header text-center"><a href="/logout" class="btn btn-default btn-sm">Logout</a>
+  </div>
+  </div>
+  </div>
+  </div>
+    <script type="text/javascript">
+$(document).ready(function () {
+ $("#dropDownUl li").on('click', function () {
+     $('#patientList').text($(this).text());
+   });
+});
+  </script>
+</div>

@@ -23,7 +23,11 @@ module.exports = function(app, passport) {
 
 	app.get('/home', isLoggedIn, function(req, res) {
 		console.log("usr here:",req.user);
-		res.render('home', {title: 'Home', usr: req.user});
+		console.log("usr role is : ", req.user.data.role);
+		if(req.user.data.role == 'Doctor')
+			res.render('doctor', {title: 'doctor', usr: req.user});	
+		else
+			res.render('home', {title: 'Home', usr: req.user});
 		loaded = true;
 	});
 	app.get('/fileupload', isLoggedIn, function(req, res) {
