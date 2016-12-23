@@ -41,6 +41,10 @@ module.exports = function(app, passport) {
 		res.render('profile', {title: 'Profile', usr: req.user});
 		loaded = true;
 	});
+	app.get('/viewPatientProfile', isLoggedIn, function(req, res) {
+		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
+		loaded = true;
+	});
 	app.get('/mamp', isLoggedIn, function(req, res) {
 		console.log("usr here:",req.user);
 		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user});

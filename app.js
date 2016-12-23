@@ -19,6 +19,8 @@ var app = express();
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
+// app.set('views', __dirname + '/views');
+// app.set('view engine', 'ejs');
 
     app.use(bodyParser.urlencoded({
 	extended: true

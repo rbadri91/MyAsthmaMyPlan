@@ -9,6 +9,12 @@
 <script src="http://hammerjs.github.io/dist/hammer-time.min.js"></script>
 
 <body>
+<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+    <ul class="nav navbar-nav">
+      <li><a><%= usr.data.email %></a></li>
+      <li><a href="/logout">Log Out</a></li>
+    </ul>
+  </nav>
   <div class="newcontainer">
   <div class="my-row special">
   <div class="v-m">
