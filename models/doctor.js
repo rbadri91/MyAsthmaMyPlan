@@ -5,8 +5,6 @@ var bcrypt   = require('bcrypt-nodejs');
 var doctorSchema = mongoose.Schema({
 
     data             : {
-    	FirstName	 : String,
-    	LastName	 : String,
     	email		 : String,
     	firstName	 : String,
     	lastName	 : String,
