@@ -22,9 +22,15 @@
     	<span class="caret"></span>
     	</button>
 	    <ul id = "dropDownUl" class="dropdown-menu">
-	      <li><a href="#">Patient 1</a></li>
-	      <li><a href="#">Patient 2</a></li>
-	      <li><a href="#">Patient 3</a></li>
+      <script type="text/javascript">
+        for(var i=0;i<patientList.length;i++){
+      </script>
+	      <li><a href="#"><% = patientList(i) %></a></li>
+	      <!-- <li><a href="#">Patient 2</a></li> -->
+	      <!-- <li><a href="#">Patient 3</a></li> -->
+        <script type="text/javascript">
+        }
+      </script>
 	    </ul>
   	  </div>
     </div>

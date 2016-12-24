@@ -19,7 +19,6 @@ module.exports = function(app, passport,user) {
  		res.redirect('/home');
  });
  app.get('/signup', alreadyLoggedIn, function(req, res) {
- 	console.log("before render signup");
  	res.render('signup', {title: 'Sign Up', message: req.flash('signupMessage')});
  });
  app.post('/signup',passport.authenticate('local-signup',{
