@@ -40,6 +40,11 @@
   </div>
   </div>
     <script type="text/javascript">
+    window.onload =function(){
+      console.log("ul element:",document.getElementById("dropDownUl"));
+      var ul = document.getElementById("dropDownUl");
+      console.log("patient list:",pList);
+    }
 
 $(document).ready(function () {
  $("#dropDownUl li").on('click', function () {

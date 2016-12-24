@@ -77,7 +77,9 @@ module.exports = function(passport) {
                     if(newUser.data.role=="Doctor"){
                         var DoctorProfile = new Doctor();
                         DoctorProfile.data.email = email;
-                         // DoctorProfile.data.patient_list.push("Patient1");
+                         DoctorProfile.data.firstName = req.body.firstName;
+                         DoctorProfile.data.lastName = req.body.lastName;
+                         DoctorProfile.data.patient_list.push("Patient1");
                         DoctorProfile.save(function(err){
                             if(err) throw err;
                         });
@@ -86,8 +88,8 @@ module.exports = function(passport) {
                     else if (newUser.data.role=="Patient"){
                         var PatientProfile = new Patient();
                         PatientProfile.data.email = email;
-                        PatientProfile.data.firstName = "Temp_first_name";
-                        PatientProfile.data.lastName = "Temp_last_name";
+                        PatientProfile.data.firstName = req.body.firstName;
+                        PatientProfile.data.lastName = req.body.lastName;
                         PatientProfile.save(function(err){
                             if(err) throw err;
                         });
