@@ -77,7 +77,7 @@ module.exports = function(passport) {
                     if(newUser.data.role=="Doctor"){
                         var DoctorProfile = new Doctor();
                         DoctorProfile.data.email = email;
-                         DoctorProfile.data.patient_list.push("Patient1");
+                         // DoctorProfile.data.patient_list.push("Patient1");
                         DoctorProfile.save(function(err){
                             if(err) throw err;
                         });

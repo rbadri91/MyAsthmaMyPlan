@@ -33,10 +33,30 @@
       </div>
       <div class="row">           
       <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: crimson">Any Question?</button></div>
+       <div class="row" id="Add_doctor_button">           
+      <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: plum" onclick="ShowSendRequestFrom()">Add Doctor</button></div>
+      </div>
+      <form class="register-form" id="send_request_form" action='/doctorRequest' method='post' style="display:none">
+        <div class="form-group" >
+            <label for="email">Doctor's Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Email Address" name ="email">
+        </div>
+        <button class="btn btn-warning btn-lg">Send Request</button>
+        <button type="button" class="btn btn-warning btn-lg" onclick="HideSendRequestForm()">Cancle</button>
+      </form>
       </div>
       </div>
       </div>
       </div>
       </div>
-       
 </div>
+<script>
+function ShowSendRequestFrom () {
+        $("#Add_doctor_button").hide();
+        $("#send_request_form").show();
+}
+function HideSendRequestForm () {
+        $("#Add_doctor_button").show();
+        $("#send_request_form").hide();
+}
+</script>

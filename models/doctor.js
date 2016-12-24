@@ -9,7 +9,8 @@ var doctorSchema = mongoose.Schema({
     	firstName	 : String,
     	lastName	 : String,
         // patient_list : [{type: mongoose.Schema.Types.ObjectId, ref: 'Patient'}]
-        patient_list:[String]
+        patient_list: [String],
+        pending_patient_requests: [String]
     }
 
 });

@@ -32,11 +32,27 @@ module.exports = function(app, passport,user) {
  		res.redirect('/home');
  });
 
+ app.post('/doctorRequest', function(req, res) {
+ 	console.log("email is ", req.body.email);
+ 	var user_email_id = req.user.data.email;
+ 	console.log("user emailid ", user_email_id);
+ 	Doctor.findOne({'data.email':req.body.email},function(err, output) {
+ 			if(err) return err;
+ 			//patientList = output.data.patient_list;
+ 			output.data.pending_patient_requests.push(user_email_id);
+ 			output.save();
+ 		});
+ 	// res.render('home', {title: 'Home', usr: req.user});
+ 	// loaded = true;
+ 	res.redirect('/home');
+ });
+
  app.get('/doctor', isLoggedIn,function(req, res) {
  		var patientList;
  		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
  			if(err) return err;
- 			patientList = output.data.patient_list;
+ 			patientList = output.data.pending_patient_requests;
+ 			console.log(patientList);
  		});
 		res.render('doctor', {title: 'doctor', usr: req.user,pList:patientList});
 		loaded = true;
