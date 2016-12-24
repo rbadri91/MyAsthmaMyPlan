@@ -3,6 +3,8 @@ var LocalStrategy   = require('passport-local').Strategy;
 
 // load up the user model
 var User            = require('../models/user.js');
+var Doctor            = require('../models/doctor.js');
+var Patient            = require('../models/patient.js');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -80,6 +82,16 @@ module.exports = function(passport) {
                             if(err) throw err;
                         });
                         console.log(" doc profile saved");
+                    }
+                    else if (newUser.data.role=="Patient"){
+                        var PatientProfile = new Patient();
+                        PatientProfile.data.email = email;
+                        PatientProfile.data.firstName = "Temp_first_name";
+                        PatientProfile.data.lastName = "Temp_last_name";
+                        PatientProfile.save(function(err){
+                            if(err) throw err;
+                        });
+                        console.log(" patient profile saved");
                     }
                     return done(null, newUser);
                 });
