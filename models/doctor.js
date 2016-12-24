@@ -5,6 +5,8 @@ var bcrypt   = require('bcrypt-nodejs');
 var doctorSchema = mongoose.Schema({
 
     data             : {
+    	FirstName	 : String,
+    	LastName	 : String,
     	email		 : String,
         // patient_list : [{type: mongoose.Schema.Types.ObjectId, ref: 'Patient'}]
         patient_list:[String]
