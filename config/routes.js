@@ -36,10 +36,12 @@ module.exports = function(app, passport,user) {
  		var patientList;
  		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
  			if(err) return err;
+ 			console.log("output.data:",output.data);
  			patientList = output.data.patient_list;
+ 			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList});
+			loaded = true;
  		});
-		res.render('doctor', {title: 'doctor', usr: req.user,pList:patientList});
-		loaded = true;
+		
 	});
  app.get('/home', isLoggedIn,function(req, res) {
 		res.render('home', {title: 'Home', usr: req.user});
