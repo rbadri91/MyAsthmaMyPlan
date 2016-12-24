@@ -6,7 +6,8 @@ var doctorSchema = mongoose.Schema({
 
     data             : {
     	email		 : String,
-        patient_list : [{type: Schema.Types.ObjectId, ref: 'Patient'}]
+        // patient_list : [{type: mongoose.Schema.Types.ObjectId, ref: 'Patient'}]
+        patient_list:[String]
     }
 
 });

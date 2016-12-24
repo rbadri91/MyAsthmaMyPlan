@@ -13,12 +13,28 @@ var express = require('express'),
 	uuidV4 = require('uuid/v4'),
 	path = require('path'),
 	db = require("./config/database.js");
+	var ConnectRoles = require('connect-roles');
 
 //set up middleware, bools, mongoose
 var app = express();
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
+
+var user = new ConnectRoles({
+  failureHandler: function (req, res, action) {
+    // optional function to customise code that runs when 
+    // user fails authorisation 
+    var accept = req.headers.accept || '';
+    res.status(403);
+    if (~accept.indexOf('html')) {
+      res.render('access-denied', {action: action});
+    } else {
+      res.send('Access Denied - You don\'t have permission to: ' + action);
+    }
+  }
+});
+
 // app.set('views', __dirname + '/views');
 // app.set('view engine', 'ejs');
 
@@ -56,5 +72,5 @@ app.use(passport.session());
 app.use(flash());
 
 //routes
-require('./config/routes.js')(app, passport);
+require('./config/routes.js')(app, passport,user);
 app.listen(3001);

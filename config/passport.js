@@ -38,7 +38,7 @@ module.exports = function(passport) {
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
     function(req, email, password, done) {
-
+        console.log("passport signup");
         // asynchronous
         // User.findOne wont fire unless data is sent back
         process.nextTick(function() {
@@ -58,7 +58,7 @@ module.exports = function(passport) {
                 // if there is no user with that email
                 // create the user
                 var newUser            = new User();
-
+                console.log("new user created");
                 // set the user's local credentials
                 newUser.data.email    = email;
                 newUser.data.password = newUser.generateHash(password);
@@ -67,10 +67,20 @@ module.exports = function(passport) {
 				else if(req.body.usertype == 1) newUser.data.role = "Doctor";
 				else console.log("no proper role for " + req.body.usertype);
 
+                
                 // save the user
                 newUser.save(function(err) {
                     if (err)
                         throw err;
+                    if(newUser.data.role=="Doctor"){
+                        var DoctorProfile = new Doctor();
+                        DoctorProfile.data.email = email;
+                         DoctorProfile.data.patient_list.push("Patient1");
+                        DoctorProfile.save(function(err){
+                            if(err) throw err;
+                        });
+                        console.log(" doc profile saved");
+                    }
                     return done(null, newUser);
                 });
             }
@@ -105,7 +115,7 @@ module.exports = function(passport) {
             // if the user is found but the password is wrong
             if (!data.validPassword(password))
                 return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); // create the loginMessage and save it to session as flashdata
-
+           
             // all is well, return successful user
             return done(null, data);
         });
