@@ -26,6 +26,7 @@ module.exports = function(app, passport,user) {
         failureFlash : true // allow flash messages
     }),
  function(req,res){
+ 	console.log("user data:",req.user.data);
  	if(req.user.data.role=="Doctor")
  		res.redirect('/doctor');
  	else
