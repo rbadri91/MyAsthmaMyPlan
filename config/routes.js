@@ -45,7 +45,7 @@ module.exports = function(app, passport,user) {
  	// 		output.save();
  	// 	});
  	res.redirect('doctor');
- 	};
+ 	
  });
 
  app.post('/doctorRequest', function(req, res) {
@@ -93,6 +93,7 @@ module.exports = function(app, passport,user) {
  	loaded = true;
  });
  app.get('/mamp', isLoggedIn, function(req, res) {
+
  	res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user});
  	loaded = true;
  });
@@ -114,3 +115,48 @@ function alreadyLoggedIn(req, res, next) {
 		res.redirect('/home');
 	return next();
 }
+app.get('/send1', function(req,res) {
+// 	var Tex1 = req.query.pInfo;
+// 	res.render('patientout',{title : 'Patient1', tex : Tex1});
+// 	fs.writeFile('patient1.txt', Tex1);
+// });
+// app.get('/send2', function(req,res) {
+// 	var Tex2 = req.query.pInfo;
+// 	res.render('patientout',{title : 'Patient2', tex : Tex2});
+// 	fs.writeFile('patient2.txt', Tex2);
+// });
+// app.get('/send3', function(req,res) {
+// 	var Tex3 = req.query.pInfo;
+// 	res.render('patientout',{title : 'Patient3', tex : Tex3});
+// 	fs.writeFile('patient3.txt', Tex3);
+// });
+// app.post('/pl1', function(req,res) {
+// 	var input = fs.readFileSync('aap1.txt');
+// 	res.send(input);
+// });
+// app.post('/pl2', function(req,res) {
+// 	var input = fs.readFileSync('aap2.txt');
+// 	res.send(input);
+// });
+// app.post('/pl3', function(req,res) {
+// 	var input = fs.readFileSync('aap3.txt');
+// 	res.send(input);
+// });
+// app.post('/fr1', function(req,res) {
+// 	fs.writeFile('aap1.txt', JSON.stringify(req.body));
+// 	console.log("test1");
+// 	AAP1Loaded = true;
+// 	res.send(req.body);
+// });
+// app.post('/fr2', function(req,res) {
+// 	fs.writeFile('aap2.txt', JSON.stringify(req.body));
+// 	console.log("test2");
+// 	AAP2Loaded = true;
+// 	res.send(req.body);
+// });
+// app.post('/fr3', function(req,res) {
+// 	fs.writeFile('aap3.txt', JSON.stringify(req.body));
+// 	console.log("test3");
+// 	AAP3Loaded = true;
+// 	res.send(req.body);
+// });
