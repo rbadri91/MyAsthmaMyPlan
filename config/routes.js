@@ -103,7 +103,12 @@ module.exports = function(app, passport,user) {
  	loaded = false;
  });
 
-};
+//};
+app.get('/send', function(req,res) {
+	var Tex1 = req.query.pInfo;
+	res.render('patientout',{title : 'Patient1', tex : Tex1});
+	fs.writeFile('patient1.txt', Tex1);
+});
 
 function isLoggedIn(req, res, next) {
 	if(req.isAuthenticated()) return next();
@@ -114,12 +119,9 @@ function alreadyLoggedIn(req, res, next) {
 	if(req.isAuthenticated())
 		res.redirect('/home');
 	return next();
+};
+
 }
-app.get('/send1', function(req,res) {
-// 	var Tex1 = req.query.pInfo;
-// 	res.render('patientout',{title : 'Patient1', tex : Tex1});
-// 	fs.writeFile('patient1.txt', Tex1);
-// });
 // app.get('/send2', function(req,res) {
 // 	var Tex2 = req.query.pInfo;
 // 	res.render('patientout',{title : 'Patient2', tex : Tex2});
