@@ -26,6 +26,7 @@ module.exports = function(app, passport, user, fs) {
         failureFlash : true // allow flash messages
     }),
  function(req,res){
+ 	console.log("user data:",req.user.data);
  	if(req.user.data.role=="Doctor")
  		res.redirect('/doctor');
  	else
@@ -64,13 +65,13 @@ module.exports = function(app, passport, user, fs) {
  });
 
  app.get('/doctor', isLoggedIn,function(req, res) {
- 		var patientList;
+ 		var patientList,pendingPatientList;
  		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
  			if(err) return err;
  			pending_patient_Requests = output.data.pending_patient_requests;
- 			console.log(pending_patient_Requests);
+ 			console.log("pending_patient_Requests in routes:",pending_patient_Requests);
  			patientList = output.data.patient_list;
- 			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList});
+ 			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList,pendingPList:pending_patient_Requests});
 			loaded = true;
  		});
 		

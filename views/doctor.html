@@ -6,12 +6,13 @@
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
     <ul class="nav navbar-nav">
-      <li><a><%= usr.data.email %></a></li>
+      <li><a><%=usr.data.email %></a></li>
       <li><a href="/logout">Log Out</a></li>
     </ul>
   </nav>
 <div class="my-asthma-my-plan-page">
-
+<div id = "patientListVal" style="visibility:hidden"><%=pList%></div>
+<div id = "pendingPatientListVal" style="visibility:hidden"><%=pendingPList%></div>
  <div class="newcontainer">
   <div class="my-row special">
   <div class="v-m">
@@ -21,12 +22,18 @@
     	<button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
     	<span class="caret"></span>
     	</button>
-	    <ul id = "dropDownUl" class="dropdown-menu">
-	      <li><a href="#">Patient 1</a></li>
-	       <li><a href="#">Patient 2</a></li> 
-	      <li><a href="#">Patient 3</a></li> 
-	    </ul>
+	    <ul id = "dropDownUl" class="dropdown-menu" style="width: 100%"></ul>
   	  </div>
+    </div>
+    <br>
+    <br>
+    <div class="row">
+      <div class="dropdown">
+      <button class="btn btn-primary dropdown-toggle" id = "pendingPatientList" type="button" data-toggle="dropdown">Pending Patient Requests
+      <span class="caret"></span>
+      </button>
+      <ul id = "dropDownPending" class="dropdown-menu" style="width: 100%"></ul>
+      </div>
     </div>
     <br>
     <br>
@@ -40,19 +47,76 @@
   </div>
   </div>
     <script type="text/javascript">
-    window.onload =function(){
-      console.log("ul element:",document.getElementById("dropDownUl"));
-      var ul = document.getElementById("dropDownUl");
-      console.log("patient list:",pList);
-    }
 
-$(document).ready(function () {
+      function handleAcceptClick(atagElement){
+          console.log("in handleAcceptClick:");
+          console.log("atagElement",atagElement);
+        }
+      (function() {
+        var elm = document.getElementById('dropDownUl');
+        var patients= document.getElementById('patientListVal').innerHTML;
+        var patientsLists = patients.split(",");
+        for(var i=0;i<patientsLists.length;i++){
+          var lielem= document.createElement("li");
+          lielem.style.display="inline";
+          lielem.innerText = patientsLists[i];
+          elm.appendChild(lielem);
+        }
+         var pendingelm = document.getElementById('dropDownPending');
+        var pendingPatients= document.getElementById('pendingPatientListVal').innerHTML;
+        console.log("pendingPatients:",pendingPatients);
+        var pendingPatientsLists = pendingPatients.split(",");
+        for(var i=0;i<pendingPatientsLists.length;i++){
+          var pendinglielem= document.createElement("li");
+          pendinglielem.appendChild(document.createTextNode(pendingPatientsLists[i]));
+          var atag = document.createElement("a");
+          atag.innerHTML = "Accept";
+          //atag.href = "#";
+          atag.id = "Accept";
+          atag.style.display="inline";
+          atag.onclick= function () { 
+             var parentdata = this.parentNode.innerText;
+             var patientemail =parentdata.replace("AcceptDecline", "");
+             console.log("parentEmail:",patientemail);
+              $.ajax({
+                type: "POST",
+                url: "/addToPatientList",
+                data: { patientEmail:patientemail },
+              error: function(result) {
+                  alert('error');
+              }
+          });
+          };
+          pendinglielem.appendChild(atag);
+
+          var atag1 = document.createElement("a");
+          atag1.innerHTML = "Decline";
+          atag1.style.display="inline";
+          atag1.id = "Decline";
+          atag1.onclick= function () { 
+              $.ajax({
+                type: "POST",
+                url: "/doctor",
+                data: {},
+            error: function(result) {
+              alert('error');
+            }
+          });
+          };
+          pendinglielem.appendChild(atag1);
+          pendingelm.appendChild(pendinglielem);
+        }
+
+      }());
+
+      $(document).ready(function () {
+ // console.log("pList in doctor:", usr.data.email);
  $("#dropDownUl li").on('click', function () {
      // $('#patientList').text($(this).text());
      document.getElementById("patientList").innerText =this.innerText;
      // console.log("test",this.innerText)
      document.getElementById("PatientProfile").style.visibility="visible";
-      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
+     document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
      // $('#PatientProfile').text("View profile of " + $(this).text());
    });
 });

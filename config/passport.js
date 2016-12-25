@@ -80,6 +80,7 @@ module.exports = function(passport) {
                          DoctorProfile.data.firstName = req.body.firstName;
                          DoctorProfile.data.lastName = req.body.lastName;
                          DoctorProfile.data.patient_list.push("Patient1");
+                         DoctorProfile.data.patient_list.push("Patient2");
                         DoctorProfile.save(function(err){
                             if(err) throw err;
                         });
