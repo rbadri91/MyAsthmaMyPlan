@@ -82,23 +82,22 @@
                 type: "POST",
                 url: "/addToPatientList",
                 data: { patientEmail:patientemail },
-            error: function(result) {
-              alert('error');
-            }
+              error: function(result) {
+                  alert('error');
+              }
           });
           };
           pendinglielem.appendChild(atag);
 
           var atag1 = document.createElement("a");
-         // atag1.href = "#";
           atag1.innerHTML = "Decline";
           atag1.style.display="inline";
           atag1.id = "Decline";
-          atag.onclick= function () { 
+          atag1.onclick= function () { 
               $.ajax({
                 type: "POST",
                 url: "/doctor",
-                data: { patientEmail:patientemail },
+                data: {},
             error: function(result) {
               alert('error');
             }
