@@ -13,6 +13,7 @@ var express = require('express'),
 	uuidV4 = require('uuid/v4'),
 	path = require('path'),
 	db = require("./config/database.js");
+  var fs = require('fs');
 	var ConnectRoles = require('connect-roles');
 
 //set up middleware, bools, mongoose
@@ -72,5 +73,5 @@ app.use(passport.session());
 app.use(flash());
 
 //routes
-require('./config/routes.js')(app, passport,user);
+require('./config/routes.js')(app, passport, user, fs);
 app.listen(3001);
