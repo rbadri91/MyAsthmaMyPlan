@@ -45,8 +45,19 @@ module.exports = function(app, passport, user, fs) {
  			output.data.pending_patient_requests.pull(patient_email_id);
  			output.save();
  		});
- 	res.redirect('doctor');
- 	
+ });
+ app.post('/removeFromPatientList', function(req, res) {
+ 	console.log("removeFromPatientList req user obj is ", req.body);
+ 	console.log("removeFromPatientList req body obj is ", req.user);
+
+ 	var patient_email_id = req.body.patientEmail;
+ 	Doctor.findOne({
+ 		'data.email': req.user.data.email}, 
+ 		function(err, output) {
+ 			if(err) return err;
+ 			output.data.pending_patient_requests.pull(patient_email_id);
+ 			output.save();
+ 		});
  });
 
  app.post('/doctorRequest', function(req, res) {
