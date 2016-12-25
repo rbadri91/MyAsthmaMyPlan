@@ -41,13 +41,23 @@ module.exports = function(app, passport, user, fs) {
  		'data.email': req.user.data.email}, 
  		function(err, output) {
  			if(err) return err;
- 			output.data.patient_list.push(patient_email_id);
- 			output.data.pending_patient_requests.pull(patient_email_id);
- 			output.save();
+ 			output.data.findOne({patient_list : patient_email_id}), function(req, data) {
+ 				if(err)
+ 					res.send(err);
+ 				if(data){
+ 					output.data.pending_patient_requests.pull(patient_email_id);
+ 					output.save();
+ 					res.send("Patient already in Patient List");
+ 				}
+ 				output.data.patient_list.push(patient_email_id);
+	 			output.data.pending_patient_requests.pull(patient_email_id);
+	 			output.save();
+	 			res.send("Added to patientList Successfully");
+ 			};	
  		});
  	res.send("Added Successfully");
  });
- app.post('/removeFromPatientList', function(req, res) {
+ app.post('/removeFromPendingPatientRequests', function(req, res) {
  	console.log("removeFromPatientList req user obj is ", req.body);
  	console.log("removeFromPatientList req body obj is ", req.user);
 
