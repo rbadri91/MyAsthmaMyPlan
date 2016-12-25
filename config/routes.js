@@ -38,22 +38,23 @@ module.exports = function(app, passport, user, fs) {
 
  	var patient_email_id = req.body.patientEmail;
  	Doctor.findOne({
- 		'data.email': req.user.data.email}, 
- 		function(err, output) {
+ 		'data.email': req.user.data.email, 'data.patient_list' : patient_email_id}, 
+ 		function(err, output, res) {
+ 			console.log("Inside Doctor findone ", output);
  			if(err) return err;
- 			output.data.findOne({patient_list : patient_email_id}), function(req, data) {
- 				if(err)
- 					res.send(err);
- 				if(data){
+ 			//output.data.find({patient_list : patient_email_id}), function(req, data) {
+ 				// if(err)
+ 				// 	res.send(err);
+ 				if(output){
  					output.data.pending_patient_requests.pull(patient_email_id);
  					output.save();
- 					res.send("Patient already in Patient List");
+ 					return res;
  				}
  				output.data.patient_list.push(patient_email_id);
 	 			output.data.pending_patient_requests.pull(patient_email_id);
 	 			output.save();
-	 			res.send("Added to patientList Successfully");
- 			};	
+	 			return res;
+ 			//};	
  		});
  });
  app.post('/removeFromPendingPatientRequests', function(req, res) {
