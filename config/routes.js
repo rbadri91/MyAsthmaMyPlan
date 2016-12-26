@@ -91,7 +91,7 @@ module.exports = function(app, passport, user, fs) {
  	res.redirect('/home');
  });
 
-	app.get('/doctor', isLoggedIn,function(req, res) {
+	app.get('/doctor', isLoggedIn, function(req, res) {
 		var patientList,pendingPatientList;
 		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
 			if(err) return err;
@@ -104,8 +104,14 @@ module.exports = function(app, passport, user, fs) {
 		
 	});
 	app.get('/home', isLoggedIn,function(req, res) {
-		res.render('home', {title: 'Home', usr: req.user});
-		loaded = true;
+		if(req.user.data.role=="Doctor")
+			res.redirect('/doctor');
+		else {
+			res.render('home', {title: 'Home', usr: req.user});
+			loaded = true;
+		}
+			//res.redirect('/home');
+			
 	});
 	app.get('/fileupload', isLoggedIn, function(req, res) {
 		res.render('fileupload', {title: 'FileUpload', usr: req.user});
@@ -145,7 +151,10 @@ function isLoggedIn(req, res, next) {
 
 function alreadyLoggedIn(req, res, next) {
 	if(req.isAuthenticated())
-		res.redirect('/home');
+		if(req.user.data.role=="Doctor")
+			res.redirect('/doctor');
+		else
+			res.redirect('/home');
 	return next();
 };
 
