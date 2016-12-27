@@ -38,7 +38,8 @@
     <br>
     <br>
     <div class="text-center">
-      <a id ="PatientProfile" style="visibility:hidden" onclick="document.location.href='/viewPatientProfile'" id ="linkPatient"></a>
+      <button id ="PatientProfile" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></button>
+      </form>
     </div>
     <br>
     <br>
@@ -77,7 +78,6 @@
           atag.onclick= function () { 
              var parentdata = this.parentNode.innerText;
              var patientemail =parentdata.replace("AcceptDecline", "");
-             console.log("parentEmail:",patientemail);
               $.ajax({
                 type: "POST",
                 url: "/addToPatientList",
@@ -117,16 +117,21 @@
         }
 
       }());
+      function viewPatientPostRequest(){
+        console.log("in viewPatientPostRequest");
+        var patientEmail= document.getElementById("patientList").innerText;
+        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {
+          location.href = '/viewPatientProfile';
+        });
+      }
 
       $(document).ready(function () {
- // console.log("pList in doctor:", usr.data.email);
  $("#dropDownUl li").on('click', function () {
      // $('#patientList').text($(this).text());
      document.getElementById("patientList").innerText =this.innerText;
      // console.log("test",this.innerText)
      document.getElementById("PatientProfile").style.visibility="visible";
      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
-     // $('#PatientProfile').text("View profile of " + $(this).text());
    });
 });
   </script>
