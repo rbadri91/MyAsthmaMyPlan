@@ -22,24 +22,13 @@ app.use('/static', express.static(path.join(__dirname, 'public')));
 app.engine('html', ejs.renderFile);
 app.set('view engine', 'html');
 
-var user = new ConnectRoles({
-  failureHandler: function (req, res, action) {
-    // optional function to customise code that runs when 
-    // user fails authorisation 
-    var accept = req.headers.accept || '';
-    res.status(403);
-    if (~accept.indexOf('html')) {
-      res.render('access-denied', {action: action});
-    } else {
-      res.send('Access Denied - You don\'t have permission to: ' + action);
-    }
-  }
-});
-
 // app.set('views', __dirname + '/views');
 // app.set('view engine', 'ejs');
 
-    app.use(bodyParser.urlencoded({
+//app.use(express.cookieParser());
+//app.use(express.session({secret: 'MYASTHMAMYPLAN_SESSION_751'}));
+
+app.use(bodyParser.urlencoded({
 	extended: true
 }));
 app.use(bodyParser.json());
@@ -73,5 +62,5 @@ app.use(passport.session());
 app.use(flash());
 
 //routes
-require('./config/routes.js')(app, passport, user, fs);
+require('./config/routes.js')(app, passport, fs);
 app.listen(3001);

@@ -1,5 +1,5 @@
 var Doctor            = require('../models/doctor.js');
-module.exports = function(app, passport, user, fs) {
+module.exports = function(app, passport, fs) {
 
 	var loaded = false;
 	app.get('/', function(req, res) {
@@ -118,6 +118,7 @@ module.exports = function(app, passport, user, fs) {
 		loaded = true;
 	});
 	app.get('/viewPatientProfile', isLoggedIn, function(req, res) {
+
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
 		loaded = true;
 	});
@@ -135,8 +136,15 @@ module.exports = function(app, passport, user, fs) {
 app.post('/send', function(req,res) {
 	var Tex1 = req.body.MyPlanDataUri;
 	console.log("in  send route");
+	if (!fs.existsSync(req.session.patientSelected)){
+    	fs.mkdirSync(req.session.patientSelected);
+	}
+
+	var newFile = req.session.patientSelected.concat("/patient1.txt");
 	//res.render('patientout',{title : 'Patient1', tex : Tex1});
-	fs.writeFile('patient11.txt', Tex1);
+	fs.writeFile(newFile, Tex1, function(err) {
+		res.send(err);
+	});
 	res.send("Successfull");
 });
 
