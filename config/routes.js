@@ -132,10 +132,11 @@ module.exports = function(app, passport, user, fs) {
 		loaded = false;
 	});
 
-app.get('/send', function(req,res) {
-	var Tex1 = req.query.pInfo;
-	res.render('patientout',{title : 'Patient1', tex : Tex1});
-	fs.writeFile('patient1.txt', Tex1);
+app.post('/send', function(req,res) {
+	var Tex1 = req.body.MyPlanDataUri;
+	//res.render('patientout',{title : 'Patient1', tex : Tex1});
+	fs.writeFile('patient11.txt', Tex1);
+	res.send("Successfull");
 });
 
 function isLoggedIn(req, res, next) {
