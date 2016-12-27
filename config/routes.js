@@ -117,7 +117,20 @@ module.exports = function(app, passport, user, fs) {
 		res.render('profile', {title: 'Profile', usr: req.user});
 		loaded = true;
 	});
-	app.get('/viewPatientProfile', isLoggedIn, function(req, res) {
+	app.post('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
+		console.log("req.body",req.body);
+		req.session.patientSelected = req.body.patient_data;
+		// res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
+		// loaded = true;
+		res.send("Success");
+	});
+	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
+		if(req.session.patientSelected)
+			console.log("session data ", req.session.patientSelected);
+		else{
+			res.redirect("/doctor");
+			return;
+		}
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
 		loaded = true;
 	});
