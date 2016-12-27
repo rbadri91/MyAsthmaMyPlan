@@ -36,9 +36,6 @@ html, body {
 .home-container .special{
   width:50%; !important
 }
-.dropdownList{
-  width:100%;
-}
 .special {height:100vh; display:table;width:100%;}
 .new .text-center {
     height:100%;

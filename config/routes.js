@@ -134,6 +134,7 @@ module.exports = function(app, passport, user, fs) {
 
 app.post('/send', function(req,res) {
 	var Tex1 = req.body.MyPlanDataUri;
+	console.log("in  send route");
 	//res.render('patientout',{title : 'Patient1', tex : Tex1});
 	fs.writeFile('patient11.txt', Tex1);
 	res.send("Successfull");

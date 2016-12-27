@@ -38,8 +38,17 @@
     var imageData;
     function handleUplod(){
       var textFile = null;
-      var blob = new Blob([imageData], {type: "text/plain;charset=utf-8"});
-      console.log("test:",document.getElementById("patientList").innerText);  
+      $.ajax({
+                type: "POST",
+                url: "/send",
+                data: { MyPlanDataUri:imageData },
+                success: function(result){
+                  location.href= "/home";
+                },
+              error: function(result) {
+                  alert('error');
+              }
+          });
     };
     function readFileURL(input) {
         if (input.files && input.files[0]) {
