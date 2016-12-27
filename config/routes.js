@@ -82,16 +82,13 @@ module.exports = function(app, passport, user, fs) {
 		console.log("user emailid ", user_email_id);
 		Doctor.findOne({'data.email':req.body.email},function(err, output) {
 			if(err) return err;
- 			//patientList = output.data.patient_list;
  			output.data.pending_patient_requests.push(user_email_id);
  			output.save();
  		});
- 	// res.render('home', {title: 'Home', usr: req.user});
- 	// loaded = true;
  	res.redirect('/home');
  });
 
-	app.get('/doctor', isLoggedIn, function(req, res) {
+	app.get('/doctor', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		var patientList,pendingPatientList;
 		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
 			if(err) return err;
@@ -110,8 +107,6 @@ module.exports = function(app, passport, user, fs) {
 			res.render('home', {title: 'Home', usr: req.user});
 			loaded = true;
 		}
-			//res.redirect('/home');
-			
 	});
 	app.get('/fileupload', isLoggedIn, function(req, res) {
 		res.render('fileupload', {title: 'FileUpload', usr: req.user});
@@ -137,7 +132,6 @@ module.exports = function(app, passport, user, fs) {
 		loaded = false;
 	});
 
-//};
 app.get('/send', function(req,res) {
 	var Tex1 = req.query.pInfo;
 	res.render('patientout',{title : 'Patient1', tex : Tex1});
@@ -156,6 +150,13 @@ function alreadyLoggedIn(req, res, next) {
 		else
 			res.redirect('/home');
 	return next();
+};
+
+function checkDoctorAuthorization(req, res, next) {
+	if(req.user.data.role=="Doctor")
+		return next();
+	else
+		res.redirect('/home');
 };
 
 }
