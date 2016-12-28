@@ -104,19 +104,20 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		if(req.user.data.role=="Doctor")
 			res.redirect('/doctor');
 		else {
+			req.session.patientSelected = req.user.data.email;
 			res.render('home', {title: 'Home', usr: req.user});
 			loaded = true;
 		}
 	});
-	app.get('/fileupload', isLoggedIn, function(req, res) {
+	app.get('/fileupload', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		res.render('fileupload', {title: 'FileUpload', usr: req.user});
 		loaded = true;
 	});
 
-	app.get('/profile', isLoggedIn, function(req, res) {
-		res.render('profile', {title: 'Profile', usr: req.user});
-		loaded = true;
-	});
+	// app.get('/profile', isLoggedIn, function(req, res) {
+	// 	res.render('profile', {title: 'Profile', usr: req.user});
+	// 	loaded = true;
+	// });
 
 	app.post('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		console.log("req.body",req.body);
@@ -125,20 +126,40 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		// loaded = true;
 		res.send("Success");
 	});
-	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
-		if(req.session.patientSelected)
-			console.log("session data ", req.session.patientSelected);
-		else{
-			res.redirect("/doctor");
-			return;
-		}
+	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req, res) {
+		// if(req.session.patientSelected)
+		// 	console.log("session data ", req.session.patientSelected);
+		// else{
+		// 	res.redirect("/doctor");
+		// 	return;
+		// }
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
 		loaded = true;
 	});
 
-	app.get('/mamp', isLoggedIn, function(req, res) {
-
-		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user});
+	app.get('/mamp', isLoggedIn, isPatientSelected, function(req, res) {
+		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
+		console.log("in get /mamp + patient id is ", patient_id_path);
+		if (!fs.existsSync(patient_id_path)){
+			patient_id_path = MAMP_files_path + "/noimage.png";
+		}
+		else{
+			var no_files = 0;
+			console.log("Going to read directory ", patient_id_path);
+			var files = fs.readdirSync(patient_id_path);
+			no_files = files.length;
+			if(no_files == 0){
+				patient_id_path = MAMP_files_path + "/noimage.png";
+			}
+			else{
+				patient_id_path = patient_id_path + "/MyPlan" + no_files + ".txt";
+			}	
+		}
+		
+		console.log("Final patient MyPlan img path is ", patient_id_path);
+		var latest_myplan_dataUri = fs.readFileSync(patient_id_path);
+		
+		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri});
 		loaded = true;
 	});
 	app.get('/logout', function(req, res) {
@@ -147,7 +168,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		loaded = false;
 	});
 
-	app.post('/send', isLoggedIn, checkDoctorAuthorization, function(req,res) {
+	app.post('/send', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req,res) {
 		console.log("Inside send");
 		var Tex1 = req.body.MyPlanDataUri;
 		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
@@ -166,7 +187,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 		console.log("no of files ", no_files);
 		var curr_file_no = no_files + 1;
-		var newFile = patient_id_path + "/patient" + curr_file_no + ".txt";
+		var newFile = patient_id_path + "/MyPlan" + curr_file_no + ".txt";
 		fs.writeFile(newFile, Tex1, (err) => {
 			if (err) res.send(err);
 			console.log('File saved successfully ! - ', newFile);
@@ -186,15 +207,26 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				res.redirect('/doctor');
 			else
 				res.redirect('/home');
-			return next();
-		};
+		return next();
+	};
 
-		function checkDoctorAuthorization(req, res, next) {
-			if(req.user.data.role=="Doctor")
-				return next();
-			else
-				res.redirect('/home');
-		};
+	function checkDoctorAuthorization(req, res, next) {
+		if(req.user.data.role=="Doctor")
+			return next();
+		else
+			res.redirect('/home');
+	};
+
+	function isPatientSelected(req, res, next) {
+		if(req.session.patientSelected){
+			console.log("Selected Patient from session data ", req.session.patientSelected);
+			return next();
+		}
+		else{
+			res.redirect("/home");
+			return;
+		}
+	};
 
 	}
 // app.get('/send2', function(req,res) {
