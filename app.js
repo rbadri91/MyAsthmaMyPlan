@@ -13,8 +13,10 @@ var express = require('express'),
 	uuidV4 = require('uuid/v4'),
 	path = require('path'),
 	db = require("./config/database.js");
-  var fs = require('fs');
-	var ConnectRoles = require('connect-roles');
+var fs = require('fs');
+var ConnectRoles = require('connect-roles');
+var MAMP_files_path = "MAMP_files"
+
 
 //set up middleware, bools, mongoose
 var app = express();
@@ -61,6 +63,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
 
+//Create a folder 'MAMP_files'
+if (!fs.existsSync(MAMP_files_path)){
+  fs.mkdirSync(MAMP_files_path);
+}
+
 //routes
-require('./config/routes.js')(app, passport, fs);
+require('./config/routes.js')(app, passport, fs, MAMP_files_path);
 app.listen(3001);

@@ -1,5 +1,5 @@
 var Doctor            = require('../models/doctor.js');
-module.exports = function(app, passport, fs) {
+module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	var loaded = false;
 	app.get('/', function(req, res) {
@@ -82,11 +82,11 @@ module.exports = function(app, passport, fs) {
 		console.log("user emailid ", user_email_id);
 		Doctor.findOne({'data.email':req.body.email},function(err, output) {
 			if(err) return err;
- 			output.data.pending_patient_requests.push(user_email_id);
- 			output.save();
- 		});
- 	res.redirect('/home');
- });
+			output.data.pending_patient_requests.push(user_email_id);
+			output.save();
+		});
+		res.redirect('/home');
+	});
 
 	app.get('/doctor', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		var patientList,pendingPatientList;
@@ -135,7 +135,7 @@ module.exports = function(app, passport, fs) {
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
 		loaded = true;
 	});
-	
+
 	app.get('/mamp', isLoggedIn, function(req, res) {
 
 		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user});
@@ -147,43 +147,56 @@ module.exports = function(app, passport, fs) {
 		loaded = false;
 	});
 
-app.post('/send', function(req,res) {
-	var Tex1 = req.body.MyPlanDataUri;
-	console.log("in  send route");
-	if (!fs.existsSync(req.session.patientSelected)){
-    	fs.mkdirSync(req.session.patientSelected);
-	}
+	app.post('/send', isLoggedIn, checkDoctorAuthorization, function(req,res) {
+		console.log("Inside send");
+		var Tex1 = req.body.MyPlanDataUri;
+		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
+		console.log("in  send route + patient id is ", patient_id_path);
+		if (!fs.existsSync(patient_id_path)){
+			fs.mkdirSync(patient_id_path);
+		}
+		//GET NUMBER OF CURRENT FILES IN PATIENT_ID_PATH DIR
+		var no_files = 0;
+		console.log("Going to read directory ", patient_id_path);
+		var files = fs.readdirSync(patient_id_path);
+		// files.forEach( function (file){
+		// 	console.log( file );
+		// });
+		no_files = files.length;
 
-	var newFile = req.session.patientSelected.concat("/patient1.txt");
-	//res.render('patientout',{title : 'Patient1', tex : Tex1});
-	fs.writeFile(newFile, Tex1, function(err) {
-		res.send(err);
+		console.log("no of files ", no_files);
+		var curr_file_no = no_files + 1;
+		var newFile = patient_id_path + "/patient" + curr_file_no + ".txt";
+		fs.writeFile(newFile, Tex1, (err) => {
+			if (err) res.send(err);
+			console.log('File saved successfully ! - ', newFile);
+		}
+		);
+		res.send("Successfull");
 	});
-	res.send("Successfull");
-});
 
-function isLoggedIn(req, res, next) {
-	if(req.isAuthenticated()) return next();
-	res.redirect('/notloggedin');
-};
+	function isLoggedIn(req, res, next) {
+		if(req.isAuthenticated()) return next();
+		res.redirect('/notloggedin');
+	};
 
-function alreadyLoggedIn(req, res, next) {
-	if(req.isAuthenticated())
-		if(req.user.data.role=="Doctor")
-			res.redirect('/doctor');
-		else
-			res.redirect('/home');
-	return next();
-};
+	function alreadyLoggedIn(req, res, next) {
+		if(req.isAuthenticated())
+			if(req.user.data.role=="Doctor")
+				res.redirect('/doctor');
+			else
+				res.redirect('/home');
+			return next();
+		};
 
-function checkDoctorAuthorization(req, res, next) {
-	if(req.user.data.role=="Doctor")
-		return next();
-	else
-		res.redirect('/home');
-};
+		function checkDoctorAuthorization(req, res, next) {
+			if(req.user.data.role=="Doctor")
+				return next();
+			else
+				res.redirect('/home');
+		};
 
-}
+	}
 // app.get('/send2', function(req,res) {
 // 	var Tex2 = req.query.pInfo;
 // 	res.render('patientout',{title : 'Patient2', tex : Tex2});
