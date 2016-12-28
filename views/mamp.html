@@ -15,12 +15,13 @@
       <li><a href="/logout">Log Out</a></li>
     </ul>
   </nav>
+  <div id = "dataUriVal" style="visibility:hidden"><%=dataUri%></div>
   <div class="newcontainer">
   <div class="my-row special">
   <div class="v-m">
   <div class ="form center-block ">
       <div class="row" style ="overflow: hidden">
-         <img id="mamp-img" src="http://pre08.deviantart.net/9e59/th/pre/i/2012/015/e/0/mountain_river_big_size_by_austriaangloalliance-d4mepo0.jpg" alt="Sample MyPlan Image" style="max-width:100%;max-height:100%;background-color: blue">
+         <img id="mamp-img" alt="Sample MyPlan Image" style="max-width:100%;max-height:100%;background-color: blue">
       </div>
          <div class="row">
         <div class="span2 center-block"><button class="btn btn-default" id="rotate-btn" type="submit" value="rotate" />Rotate</div>
@@ -41,4 +42,14 @@
       </div>
 </div>
 <script src="static/zoomin-out-hammer-use.js"></script>
+ <script type="text/javascript">
+   (function() {
+    var imageUri= document.getElementById('dataUriVal').innerHTML;
+      if(imageUri){
+        document.getElementById('mamp-img').src = imageUri;
+      }else{
+        document.getElementById('mamp-img').innerText = "No image found to upload"
+      }
+    }());
+ </script>
 </body>
