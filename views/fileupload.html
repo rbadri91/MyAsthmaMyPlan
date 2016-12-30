@@ -28,7 +28,7 @@
       <div class="col-sm-12"><button style="background-color: green" class="btn btn-default btn-sm" onclick="handleUplod(this)">Upload</button></div>
       </div>
       <div class="row">
-        <div class="col-sm-12"><button style="background-color: orange" class="btn btn-default btn-sm" onclick="document.location.href='/home'">Return Home</button></div>
+        <div class="col-sm-12"><button style="background-color: orange" class="btn btn-default btn-sm" onclick="document.location.href='/viewPatientProfile'">Return Patient's Home</button></div>
       </div>
   </div>
   </div>
@@ -56,6 +56,7 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             document.getElementById("chosenFile").style.visibility="visible";
+
             reader.onload = function (e) {
                 $('#chosenFile').attr('src', e.target.result).width(150).height(150);
                   console.log("result:",e.target.result);
