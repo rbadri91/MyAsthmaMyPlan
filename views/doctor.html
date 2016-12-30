@@ -39,6 +39,7 @@
     <br>
     <div class="text-center">
       <a  style="  text-decoration: underline" id ="PatientProfile" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></a>
+      <span id ="right_arrow" class="glyphicon glyphicon-arrow-right" aria-hidden="true" style="visibility:hidden"></span>
       </form>
     </div>
     <br>
@@ -119,7 +120,7 @@
       }());
       function viewPatientPostRequest(){
         var patientEmail= document.getElementById("patientList").innerText;
-        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {
+        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
           location.href = '/viewPatientProfile';
         });
       }
@@ -127,6 +128,7 @@
       $(document).ready(function () {
  $("#dropDownUl li").on('click', function () {
      document.getElementById("PatientProfile").style.visibility="visible";
+      document.getElementById("right_arrow").style.visibility="visible";
      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
    });
 });
