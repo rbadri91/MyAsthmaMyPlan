@@ -42,6 +42,8 @@
                 type: "POST",
                 url: "/send",
                 data: { MyPlanDataUri:imageData },
+                datatype: "JSON",
+                async: false,
                 success: function(result){
                   location.href= "/viewPatientProfile";
                 },

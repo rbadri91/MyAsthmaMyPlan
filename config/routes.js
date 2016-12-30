@@ -141,7 +141,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
 		console.log("in get /mamp + patient id is ", patient_id_path);
 		if (!fs.existsSync(patient_id_path)){
-			patient_id_path = MAMP_files_path + "/noimage.png";
+			patient_id_path = MAMP_files_path + "/noimage.txt";
 		}
 		else{
 			var no_files = 0;
@@ -149,7 +149,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			var files = fs.readdirSync(patient_id_path);
 			no_files = files.length;
 			if(no_files == 0){
-				patient_id_path = MAMP_files_path + "/noimage.png";
+				patient_id_path = MAMP_files_path + "/noimage.txt";
 			}
 			else{
 				patient_id_path = patient_id_path + "/MyPlan" + no_files + ".txt";
