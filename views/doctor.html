@@ -19,17 +19,17 @@
   <div class="form center-block ">
     <div class="row">
       <div class="dropdown">
-    	<button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
-    	<span class="caret"></span>
-    	</button>
-	    <ul id = "dropDownUl" class="dropdown-menu" style="width: 100%"></ul>
-  	  </div>
+      <button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
+      <span class="caret"></span>
+      </button>
+      <ul id = "dropDownUl" class="dropdown-menu" style="width: 100%"></ul>
+      </div>
     </div>
     <br>
     <br>
     <div class="row">
       <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" id = "pendingPatientList" type="button" data-toggle="dropdown">Pending Patient Requests
+      <button class="btn btn-primary dropdown-toggle" style="background-color: grey" id = "pendingPatientList" type="button" data-toggle="dropdown">Pending Patient Requests
       <span class="caret"></span>
       </button>
       <ul id = "dropDownPending" class="dropdown-menu" style="width: 100%"></ul>
@@ -38,7 +38,8 @@
     <br>
     <br>
     <div class="text-center">
-      <button id ="PatientProfile" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></button>
+      <a  style="  text-decoration: underline" id ="PatientProfile" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></a>
+      <span id ="right_arrow" class="glyphicon glyphicon-arrow-right" aria-hidden="true" style="visibility:hidden"></span>
       </form>
     </div>
     <br>
@@ -118,19 +119,16 @@
 
       }());
       function viewPatientPostRequest(){
-        console.log("in viewPatientPostRequest");
         var patientEmail= document.getElementById("patientList").innerText;
-        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {
+        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
           location.href = '/viewPatientProfile';
         });
       }
 
       $(document).ready(function () {
  $("#dropDownUl li").on('click', function () {
-     // $('#patientList').text($(this).text());
-     document.getElementById("patientList").innerText =this.innerText;
-     // console.log("test",this.innerText)
      document.getElementById("PatientProfile").style.visibility="visible";
+      document.getElementById("right_arrow").style.visibility="visible";
      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
    });
 });
