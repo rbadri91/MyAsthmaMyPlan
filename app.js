@@ -31,9 +31,10 @@ app.set('view engine', 'html');
 //app.use(express.session({secret: 'MYASTHMAMYPLAN_SESSION_751'}));
 
 app.use(bodyParser.urlencoded({
+	limit: '50mb',
 	extended: true
 }));
-app.use(bodyParser.json());
+app.use(bodyParser.json({limit: '50mb'}));
 
 app.use(morgan('dev'));
 app.use(bodyParser.json({ type: 'application/vnd.api+json' }));
