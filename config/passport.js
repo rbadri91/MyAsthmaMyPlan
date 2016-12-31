@@ -35,8 +35,8 @@ module.exports = function(passport) {
 
     passport.use('local-signup', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
+        usernameField : "email",
+        passwordField : "password",
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
     function(req, email, password, done) {
@@ -79,8 +79,6 @@ module.exports = function(passport) {
                         DoctorProfile.data.email = email;
                          DoctorProfile.data.firstName = req.body.firstName;
                          DoctorProfile.data.lastName = req.body.lastName;
-                         DoctorProfile.data.patient_list.push("Patient1");
-                         DoctorProfile.data.patient_list.push("Patient2");
                         DoctorProfile.save(function(err){
                             if(err) throw err;
                         });
@@ -110,8 +108,8 @@ module.exports = function(passport) {
 
 	passport.use('local-login', new LocalStrategy({
         // by default, local strategy uses username and password, we will override with email
-        usernameField : 'email',
-        passwordField : 'password',
+        usernameField : "email",
+        passwordField : "password",
         passReqToCallback : true // allows us to pass back the entire request to the callback
     },
     function(req, email, password, done) { // callback with email and password from our form
