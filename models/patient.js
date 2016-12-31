@@ -1,5 +1,4 @@
 var mongoose = require('mongoose');
-var bcrypt   = require('bcrypt-nodejs');
 
 var myPlan = mongoose.Schema({
 	filename: String,
@@ -19,7 +18,12 @@ var patientSchema = mongoose.Schema({
     }
 });
 
-
 // create the model for patients and expose it to our app
+// var patientModel= mongoose.model('Patient', patientSchema);
+// var myPlanModel=module.exports = mongoose.model('Patient', myPlan);
+// module.exports = {
+// 	patientModel: patientModel,
+// 	myPlanModel:myPlanModel
+// }
+
 module.exports = mongoose.model('Patient', patientSchema);
-module.exports = mongoose.model('MyPlan', myPlan);

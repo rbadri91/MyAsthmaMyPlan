@@ -187,13 +187,20 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		var curr_file_no = no_files + 1;
 		var newFile = patient_id_path + "/MyPlan" + curr_file_no + ".txt";
 		fs.writeFile(newFile, Tex1, (err) => {
-			if (err) res.send(err);
+			if (err) {
+				res.send(err);
+				return;
+			}
+				
 			console.log('File saved successfully ! - ', newFile);
 		}
 		);
 
+		var Patient_email = req.session.patientSelected;
+		var doctor_email = req.user.data.email;
+		console.log("before findone + ", Patient_email);
 		Patient.findOne({
-			'data.email': req.session.patientSelected}, 
+			'data.email': Patient_email}, 
 			function(err, output) {
 				console.log("Inside Patient findone ", output);
 				if(err){
@@ -202,19 +209,22 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				} 
 
 				if(output){
-					var newPlan = new MyPlan();
+					//var newPlan = new MyPlan();
+					var current_time = new Date().getTime();
+					var file_name = "MyPlan" + curr_file_no + ".txt";
+					output.data.myPlans.push({filename: file_name, doctor: doctor_email, timestamp: current_time});
                 	console.log("new myplan created");
-                	newPlan.filename = "MyPlan" + curr_file_no + ".txt";
-                	newPlan.doctor = req.data.email;
-                	newPlan.timestamp = new Date().getTime();
-                	output.data.myPlans.push(newPlan);
+                	// newPlan.filename = "MyPlan" + curr_file_no + ".txt";
+                	// newPlan.doctor = doctor_email;
+                	// newPlan.timestamp = new Date().getTime();
+                	// output.data.myPlans.push(newPlan);
                 	output.save();
                 	res.send("New MyPlan successfuly added.");
 					return;
 				}
 			});
 
-		res.send("Some issue with finding the patient");
+		//res.send("Some issue with finding the patient");
 	});
 
 	app.get('/getPatientHistory', isLoggedIn, function(req, res){
@@ -240,7 +250,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 					return;
 				}
 			});
-		res.send("Couldn't find patient in /getPatientHistory");
+		//res.send("Couldn't find patient in /getPatientHistory");
 	});
 
 	function isLoggedIn(req, res, next) {
