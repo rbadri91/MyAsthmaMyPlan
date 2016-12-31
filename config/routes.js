@@ -88,15 +88,19 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		});
 		res.redirect('/home');
 	});
+	var userDetails={};
 
 	app.get('/doctor', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		var patientList,pendingPatientList;
 		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
 			if(err) return err;
 			pending_patient_Requests = output.data.pending_patient_requests;
+			console.log("output.data:",output.data);
 			console.log("pending_patient_Requests in routes:",pending_patient_Requests);
 			patientList = output.data.patient_list;
-			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList,pendingPList:pending_patient_Requests});
+			console.log("req.user:",req.user);
+			userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList,pendingPList:pending_patient_Requests,usrDetails:userDetails});
 			loaded = true;
 		});
 		
@@ -106,12 +110,17 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			res.redirect('/doctor');
 		else {
 			req.session.patientSelected = req.user.data.email;
-			res.render('home', {title: 'Home', usr: req.user});
-			loaded = true;
+			Patient.findOne({'data.email':req.user.data.email},function(err, output) {
+				if(err) return err;
+				userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+				res.render('home', {title: 'Home', usr: req.user,usrDetails:userDetails});
+				loaded = true;
+			});
+			
 		}
 	});
 	app.get('/fileupload', isLoggedIn, checkDoctorAuthorization, function(req, res) {
-		res.render('fileupload', {title: 'FileUpload', usr: req.user});
+		res.render('fileupload', {title: 'FileUpload', usr: req.user ,usrDetails:userDetails});
 		loaded = true;
 	});
 
@@ -121,7 +130,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		res.send("Success");
 	});
 	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req, res) {
-		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
+		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user,usrDetails:userDetails});
 		loaded = true;
 	});
 
@@ -148,7 +157,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		//console.log("Final patient MyPlan img path is ", patient_id_path);
 		var latest_myplan_dataUri = fs.readFileSync(patient_id_path);
 		
-		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri});
+		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri,usrDetails:userDetails});
 		loaded = true;
 	});
 	app.get('/logout', function(req, res) {

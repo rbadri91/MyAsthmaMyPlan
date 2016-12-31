@@ -6,7 +6,7 @@
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
     <ul class="nav navbar-nav">
-      <li><a><%=usr.data.email %></a></li>
+       <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
       <li><a href="/logout">Log Out</a></li>
     </ul>
   </nav>
@@ -75,6 +75,7 @@
           pendinglielem.appendChild(document.createTextNode(pendingPatientsLists[i]));
           var atag = document.createElement("a");
           atag.innerHTML = "Accept";
+          atag.style.textDecoration ="underline";
           atag.style.display="inline";
           atag.onclick= function () { 
              var parentdata = this.parentNode.innerText;
@@ -98,6 +99,7 @@
           var atag1 = document.createElement("a");
           atag1.innerHTML = "Decline";
           atag1.style.display="inline";
+          atag1.style.textDecoration ="underline";
           atag1.onclick= function () { 
               var parentdata = this.parentNode.innerText;
              var patientemail =parentdata.replace("AcceptDecline", "");
