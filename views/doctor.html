@@ -38,8 +38,8 @@
     <br>
     <br>
     <div class="text-center">
-      <a  style="  text-decoration: underline" id ="PatientProfile" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></a>
-      <span id ="right_arrow" class="glyphicon glyphicon-arrow-right" aria-hidden="true" style="visibility:hidden"></span>
+     <a  style="  text-decoration: underline" id ="PatientProfile" class ="lead" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></a>
+      
       </form>
     </div>
     <br>
@@ -132,7 +132,7 @@
  $("#dropDownUl li").on('click', function () {
     patientEmail = this.innerText;
      document.getElementById("PatientProfile").style.visibility="visible";
-      document.getElementById("right_arrow").style.visibility="visible";
+      // document.getElementById("right_arrow").style.visibility="visible";
      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
    });
 });
