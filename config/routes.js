@@ -1,4 +1,5 @@
 var Doctor            = require('../models/doctor.js');
+var Patient 		  = require('../models/patient.js');
 module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	var loaded = false;
@@ -114,16 +115,9 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		loaded = true;
 	});
 
-	// app.get('/profile', isLoggedIn, function(req, res) {
-	// 	res.render('profile', {title: 'Profile', usr: req.user});
-	// 	loaded = true;
-	// });
-
 	app.post('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		console.log("req.body",req.body);
 		req.session.patientSelected = req.body.patient_data;
-		// res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user});
-		// loaded = true;
 		res.send("Success");
 	});
 	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req, res) {
@@ -132,8 +126,9 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	});
 
 	app.get('/mamp', isLoggedIn, isPatientSelected, function(req, res) {
+
 		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
-		console.log("in get /mamp + patient id is ", patient_id_path);
+		//console.log("in get /mamp + patient id is ", patient_id_path);
 		if (!fs.existsSync(patient_id_path)){
 			patient_id_path = MAMP_files_path + "/noimage.txt";
 		}
@@ -150,13 +145,14 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			}	
 		}
 		
-		console.log("Final patient MyPlan img path is ", patient_id_path);
+		//console.log("Final patient MyPlan img path is ", patient_id_path);
 		var latest_myplan_dataUri = fs.readFileSync(patient_id_path);
 		
 		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri});
 		loaded = true;
 	});
 	app.get('/logout', function(req, res) {
+
 		req.session.destroy();
 		req.logout();
 		res.redirect('/');
@@ -164,20 +160,18 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	});
 
 	app.post('/send', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req,res) {
-		console.log("Inside send");
+		
 		var Tex1 = req.body.MyPlanDataUri;
 		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
 		console.log("in  send route + patient id is ", patient_id_path);
 		if (!fs.existsSync(patient_id_path)){
 			fs.mkdirSync(patient_id_path);
 		}
+
 		//GET NUMBER OF CURRENT FILES IN PATIENT_ID_PATH DIR
 		var no_files = 0;
 		console.log("Going to read directory ", patient_id_path);
 		var files = fs.readdirSync(patient_id_path);
-		// files.forEach( function (file){
-		// 	console.log( file );
-		// });
 		no_files = files.length;
 
 		console.log("no of files ", no_files);
@@ -188,7 +182,56 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			console.log('File saved successfully ! - ', newFile);
 		}
 		);
-		res.send("Successfull");
+
+		Patient.findOne({
+			'data.email': req.session.patientSelected}, 
+			function(err, output) {
+				console.log("Inside Patient findone ", output);
+				if(err){
+					res.send(err);
+					return;	
+				} 
+
+				if(output){
+					var newPlan = new MyPlan();
+                	console.log("new myplan created");
+                	newPlan.filename = "MyPlan" + curr_file_no + ".txt";
+                	newPlan.doctor = req.data.email;
+                	newPlan.timestamp = new Date().getTime();
+                	output.data.myPlans.push(newPlan);
+                	output.save();
+                	res.send("New MyPlan successfuly added.");
+					return;
+				}
+			});
+
+		res.send("Some issue with finding the patient");
+	});
+
+	app.get('/getPatientHistory', isLoggedIn, function(req, res){
+		var patientEmail;
+		if(req.user.data.role == 'Patient')
+			patientEmail = req.user.data.email;
+		else
+			patientEmail = req.session.patientSelected;
+		Patient.findOne({
+			'data.email': patientEmail}, 
+			function(err, output) {
+				console.log("Inside Patient findone ", output);
+				if(err){
+					res.send(err);
+					return;	
+				} 
+
+				if(output){
+                	console.log("getting patient history");
+                	var myPlans = output.data.myPlans;
+                	console.log(myPlans);
+                	res.send("get patient history call was successful.");
+					return;
+				}
+			});
+		res.send("Couldn't find patient in /getPatientHistory");
 	});
 
 	function isLoggedIn(req, res, next) {
