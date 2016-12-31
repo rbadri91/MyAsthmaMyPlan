@@ -137,12 +137,6 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		res.send("Success");
 	});
 	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req, res) {
-		// if(req.session.patientSelected)
-		// 	console.log("session data ", req.session.patientSelected);
-		// else{
-		// 	res.redirect("/doctor");
-		// 	return;
-		// }
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user,usrDetails:userDetails});
 		loaded = true;
 	});
@@ -173,6 +167,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		loaded = true;
 	});
 	app.get('/logout', function(req, res) {
+		req.session.destroy();
 		req.logout();
 		res.redirect('/');
 		loaded = false;
