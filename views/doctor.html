@@ -120,8 +120,9 @@
         }
 
       }());
+      var patientEmail;
       function viewPatientPostRequest(){
-        var patientEmail= document.getElementById("patientList").innerText;
+        
         $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
           location.href = '/viewPatientProfile';
         });
@@ -129,6 +130,7 @@
 
       $(document).ready(function () {
  $("#dropDownUl li").on('click', function () {
+    patientEmail = this.innerText;
      document.getElementById("PatientProfile").style.visibility="visible";
       document.getElementById("right_arrow").style.visibility="visible";
      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
