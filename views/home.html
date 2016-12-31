@@ -56,7 +56,6 @@ function PlanHistory(){
    $.ajax({
                 type: "GET",
                 url: "/getPatientHistory",
-                data: { patientEmail:patientemail },
                 success: function(result){
                   console.log("success");
                 },
