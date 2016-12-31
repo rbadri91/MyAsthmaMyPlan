@@ -21,7 +21,7 @@
         <div class="col-sm-6"><button class="btn btn-primary btn-md btn-lg" style="background-color: blue" onclick="document.location.href='/fileupload'">Create new Plan</button></div> 
       </div>
       <div class="row">
-          <div class="col-sm-6"><button class="btn btn-primary btn-md btn-lg pull-right" style="background-color: coral">MyPlan History</button></div>
+          <div class="col-sm-6"><button id ="PlanHistory" onclick ="PlanHistory(this)"class="btn btn-primary btn-md btn-lg pull-right" style="background-color: coral">MyPlan History</button></div>
           <div class="col-sm-6"><button class="btn btn-primary btn-md btn-lg" style="background-color: coral">Patient Log</button></div>
       </div>
       <div class="row">
@@ -52,6 +52,19 @@
       </div>
 </div>
 <script>
+function PlanHistory(){
+   $.ajax({
+                type: "GET",
+                url: "/getPatientHistory",
+                data: { patientEmail:patientemail },
+                success: function(result){
+                  console.log("success");
+                },
+              error: function(result) {
+                  alert('error');
+              }
+          });
+}
 function ShowSendRequestFrom () {
         $("#Add_doctor_button").hide();
         $("#send_request_form").show();
