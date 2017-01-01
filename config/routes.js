@@ -238,15 +238,16 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			function(err, output) {
 				console.log("Inside Patient findone ", output);
 				if(err){
-					res.send(err);
-					return;	
+					// res.send(err);
+					return err;	
 				} 
 
 				if(output){
                 	console.log("getting patient history");
                 	var myPlans = output.data.myPlans;
                 	console.log(myPlans);
-                	res.send("get patient history call was successful.");
+                	// res.send("get patient history call was successful.");
+                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails});
 					return;
 				}
 			});

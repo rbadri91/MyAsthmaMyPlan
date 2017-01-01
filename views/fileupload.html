@@ -59,7 +59,6 @@
 
             reader.onload = function (e) {
                 $('#chosenFile').attr('src', e.target.result).width(150).height(150);
-                  console.log("result:",e.target.result);
                   imageData = e.target.result;
             };
               console.log("data url:"+reader.readAsDataURL(input.files[0]));
