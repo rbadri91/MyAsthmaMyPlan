@@ -247,7 +247,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
                 	var myPlans = output.data.myPlans;
                 	console.log(myPlans);
                 	// res.send("get patient history call was successful.");
-                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails});
+                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails,fileDetails:myPlans});
 					return;
 				}
 			});
