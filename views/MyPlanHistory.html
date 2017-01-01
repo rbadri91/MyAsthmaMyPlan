@@ -50,22 +50,42 @@
 			}
 			for(var i=0;i<details.length;i++){
 					var rowDiv = document.createElement("div");
-					rowDiv.className ="row"; //<div class="col-sm-4">
+					rowDiv.className ="row";
 					var colDiv1 = document.createElement("div");
-					colDiv1.className ="col-sm-4"
-					colDiv1.innerText = details[i].filename;
+					colDiv1.className ="col-sm-3";
+					var fileNameValue = details[i].filename
+					colDiv1.innerText = fileNameValue;
 					rowDiv.appendChild(colDiv1);
 					var colDiv2 = document.createElement("div");
-					colDiv2.className ="col-sm-4"
+					colDiv2.className ="col-sm-3"
 					colDiv2.innerText = details[i].doctor;
 					rowDiv.appendChild(colDiv2);
 					var colDiv3 = document.createElement("div");
-					colDiv3.className ="col-sm-4"
+					colDiv3.className ="col-sm-3"
 					var dt = new Date(details[i].timestamp);
 					var fullDate = dt.getMonth() +1 +"/" + dt.getDate() + "/" +dt.getFullYear();
 					colDiv3.innerText = fullDate;
 					rowDiv.appendChild(colDiv3);
+					var colDiv4 = document.createElement("div");
+					var viewButton = document.createElement("button");
+					viewButton.innerText ="View";
+					viewButton.name = fileNameValue;
+					viewButton.className ="btn-primary";
+					viewButton.addEventListener('click', function(){
+						if(this.innerText=="View"){
+							this.innerText ="Hide";
+							 handleViewButtonClick(this.name);
+						}else {
+							this.innerText ="View";
+							document.getElementById(this.name).src ="";
+							document.getElementById(this.name).style ="";
+						}	
+					   
+					});
+					colDiv4.appendChild(viewButton);
+					rowDiv.appendChild(colDiv4);
 					var imageDiv = document.createElement("img");
+					imageDiv.id = fileNameValue;
 					rowDiv.appendChild(imageDiv);
 					listFilesDiv.appendChild(rowDiv)
 			}
@@ -77,7 +97,7 @@
 			$('#selectionRow').on('change', '#doctorSelect', function(){
 				handleDoctorSelect();
 			});
-			
+
 			selectionRow.appendChild(doctorSelectList);
 			var docSet =new Set();
 			console.log("details:",details);
@@ -105,24 +125,57 @@
 						var rowDiv1 = document.createElement("div");
 						rowDiv1.className ="row";
 						var colDiv1 = document.createElement("div");
-						colDiv1.className ="col-sm-4"
-						colDiv1.innerText = details[i].filename;
+						colDiv1.className ="col-sm-3"
+						var fileNameValue = details[i].filename;
+						colDiv1.innerText = fileNameValue;
 						rowDiv1.appendChild(colDiv1);
 						var colDiv2 = document.createElement("div");
-						colDiv2.className ="col-sm-4"
+						colDiv2.className ="col-sm-3"
 						colDiv2.innerText = details[i].doctor;
 						rowDiv1.appendChild(colDiv2);
 						var colDiv3 = document.createElement("div");
-						colDiv3.className ="col-sm-4"
+						colDiv3.className ="col-sm-3"
 						var dt = new Date(details[i].timestamp);
 						var fullDate = dt.getMonth() +1 +"/" + dt.getDate() + "/" +dt.getFullYear();
 						colDiv3.innerText = fullDate;
 						rowDiv1.appendChild(colDiv3);
+						var colDiv4 = document.createElement("div");
+						var viewButton = document.createElement("button");
+						viewButton.innerText ="View";
+						viewButton.name = fileNameValue;
+						viewButton.className ="btn-primary";
+						viewButton.addEventListener('click', function(){
+							if(this.innerText=="View"){
+								this.innerText ="Hide";
+								 handleViewButtonClick(this.name);
+							}else {
+								this.innerText ="View";
+								document.getElementById(this.name).src ="";
+								document.getElementById(this.name).style ="";
+						}	
+						});
+						colDiv4.appendChild(viewButton);
+						rowDiv1.appendChild(colDiv4);
 						var imageDiv = document.createElement("img");
+						imageDiv.id = fileNameValue;
 						rowDiv1.appendChild(imageDiv);
 						listFilesDiv.appendChild(rowDiv1);
 				}
 			}
-	}
+	};
+	function handleViewButtonClick(filename){
+		   $.ajax({
+                type: "POST",
+                url: "/getFileContent",
+                 data: { fileName:filename },
+                 success: function(result){
+                 	$('#'+filename).attr('src', result).width(300).height(300);
+                 	// document.getElementById(filename).src = result;
+                },
+            error: function(result) {
+              alert('error');
+            }
+          });
+	};
 	
   </script>

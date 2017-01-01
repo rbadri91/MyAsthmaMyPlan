@@ -160,6 +160,17 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri,usrDetails:userDetails});
 		loaded = true;
 	});
+	app.post('/getFileContent', isLoggedIn, function(req, res) {
+		var filePath;
+		if(req.user.data.role == 'Patient')
+			filePath = MAMP_files_path + "/" +req.user.data.email;
+		else
+			filePath = MAMP_files_path + "/" +req.session.patientSelected;
+
+			filePath += "/"+req.body.fileName+".txt";
+			var planUri = fs.readFileSync(filePath);
+			res.send(planUri)
+	});
 	app.get('/logout', function(req, res) {
 
 		req.session.destroy();
