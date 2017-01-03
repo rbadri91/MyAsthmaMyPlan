@@ -34,12 +34,12 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			res.redirect('/home');
 	});
 	app.post('/addToPatientList', function(req, res) {
-		console.log("addToPatientList req user obj is ", req.body);
-		console.log("addToPatientList req body obj is ", req.user);
+		//console.log("addToPatientList req user obj is ", req.body);
+		//console.log("addToPatientList req body obj is ", req.user);
 
 		var patient_email_id = req.body.patientEmail;
 		Doctor.findOne({
-			'data.email': req.user.data.email, 'data.patient_list' : patient_email_id}, 
+			'data.email': req.user.data.email}, 
 			function(err, output) {
 				console.log("Inside Doctor findone ", output);
 				if(err){
@@ -48,15 +48,24 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				} 
 
 				if(output){
+					if(output.data.patient_list){
+						console.log("Searching patient in doc's patient_list");
+						var search_out = output.data.patient_list.indexOf(patient_email_id);
+						if(search_out > 0){
+							//No patient in Patient_list
+							output.data.pending_patient_requests.pull(patient_email_id);
+							console.log("Patient already exists in Patient List");
+							output.save();
+							res.send("Patient already exists in Patient List");
+							return;
+						}
+					}
+					output.data.patient_list.push(patient_email_id);
 					output.data.pending_patient_requests.pull(patient_email_id);
 					output.save();
-					res.send("Patient already exists in Patient List");
-					return;
+					res.send("Patient successfully added to Patient List");
 				}
-				output.data.patient_list.push(patient_email_id);
-				output.data.pending_patient_requests.pull(patient_email_id);
-				output.save();
-				res.send("Patient successfully added to Patient List");
+				
 			});
 	});
 	app.post('/removeFromPendingPatientRequests', function(req, res) {
