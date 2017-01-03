@@ -52,17 +52,19 @@
         var elm = document.getElementById('dropDownUl');
         var patients= document.getElementById('patientListVal').innerHTML;
         console.log("patients",patients);
-        if(patients=="")return;
-        var patientsLists = patients.split(",");
-        for(var i=0;i<patientsLists.length;i++){
+        if(!patients==""){
+          var patientsLists = patients.split(",");
+          for(var i=0;i<patientsLists.length;i++){
 
-          var lielem= document.createElement("li");
-          lielem.innerText = patientsLists[i];
-          elm.appendChild(lielem);
+            var lielem= document.createElement("li");
+            lielem.innerText = patientsLists[i];
+            elm.appendChild(lielem);
+          }
         }
+
          var pendingelm = document.getElementById('dropDownPending');
         var pendingPatients= document.getElementById('pendingPatientListVal').innerHTML;
-
+        console.log("pendingPatients:",pendingPatients);
         if(pendingPatients=="")return;
 
         var pendingPatientsLists = pendingPatients.split(",");
