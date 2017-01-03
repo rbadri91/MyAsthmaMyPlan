@@ -7,7 +7,7 @@
 <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
     <ul class="nav navbar-nav">
        <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <li><a href="/logout">Log Out</a></li>
+      <button type="button" onclick="document.location.href='/logout'"class="btn btn-default navbar-btn">Log Out</button>
     </ul>
   </nav>
 <div class="doctorPage">
@@ -51,7 +51,6 @@
       (function() {
         var elm = document.getElementById('dropDownUl');
         var patients= document.getElementById('patientListVal').innerHTML;
-        console.log("patients",patients);
         if(!patients==""){
           var patientsLists = patients.split(",");
           for(var i=0;i<patientsLists.length;i++){
@@ -64,7 +63,6 @@
 
          var pendingelm = document.getElementById('dropDownPending');
         var pendingPatients= document.getElementById('pendingPatientListVal').innerHTML;
-        console.log("pendingPatients:",pendingPatients);
         if(pendingPatients=="")return;
 
         var pendingPatientsLists = pendingPatients.split(",");

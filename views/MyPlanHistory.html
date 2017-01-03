@@ -18,7 +18,8 @@
   	<br>
   	<div id ="fileDetails" style="visibility:hidden"><%= fileDetails%></div>
   	<div id ="selectionRow" class ="row text-center">
-  	<div class="col-sm-10">	<select id ="SelectType" onchange="handleChangeType()" class="selectpicker input-xxlarge" data-style="btn-primary">
+  	<div class="col-sm-4"></div>
+  	<div class="col-sm-4 center-block">	<select id ="SelectType" onchange="handleChangeType()" class="form-control input-xxlarge" style ="display: inline" data-style="btn-primary">
 		  <option>Recently Uploaded</option>
 		  <option>Date</option>
 		  <option>Doctor</option>
@@ -34,12 +35,15 @@
   	var time2 = 1483251417634;
   	var time3 = 1483256303464;
   	var time4 = 1483256338867;
-  	var details= [{filename: "MyPlan1", doctor: "doctor@doctor.com", timestamp: time1},{filename: "MyPlan2", doctor: "doctor@doctor.com", timestamp: time2},{filename: "MyPlan3", doctor: "doctor1@doctor.com", timestamp: time3},{filename: "MyPlan4", doctor: "doctor2@doctor.com", timestamp: time4}];
-  	details.sort(function(a, b) {
-    		return time2 - time1;
-		});
-	
-	function handleChangeType()	{
+  	var patientPlanDetails;
+
+  			var details;
+  			details = JSON.parse(document.getElementById("fileDetails").innerHTML);
+  			details.sort(function(a, b) {
+    			return b.timestamp - a.timestamp;
+			});
+
+  		function handleChangeType()	{
 		var listFilesDiv = document.getElementById("listFiles");
 		listFilesDiv.innerText ="";
 		var selectType = document.getElementById('SelectType').value;
@@ -53,7 +57,8 @@
 					rowDiv.className ="row";
 					var colDiv1 = document.createElement("div");
 					colDiv1.className ="col-sm-3";
-					var fileNameValue = details[i].filename
+					var fileNameValue = details[i].filename;
+					fileNameValue= fileNameValue.substring(0,fileNameValue.lastIndexOf("."));
 					colDiv1.innerText = fileNameValue;
 					rowDiv.appendChild(colDiv1);
 					var colDiv2 = document.createElement("div");
@@ -61,8 +66,8 @@
 					colDiv2.innerText = details[i].doctor;
 					rowDiv.appendChild(colDiv2);
 					var colDiv3 = document.createElement("div");
-					colDiv3.className ="col-sm-3"
-					var dt = new Date(details[i].timestamp);
+					colDiv3.className ="col-sm-3";
+					var dt = new Date(Number(details[i].timestamp));
 					var fullDate = dt.getMonth() +1 +"/" + dt.getDate() + "/" +dt.getFullYear();
 					colDiv3.innerText = fullDate;
 					rowDiv.appendChild(colDiv3);
@@ -90,17 +95,20 @@
 					listFilesDiv.appendChild(rowDiv)
 			}
 		}else if(selectType =="Doctor")	{
-			var doctorSelectList = document.createElement("select"); //selectpicker
-			// doctorSelectList.className ="selectpicker"
+			var colDiv1 = document.createElement("div"); //.form-control
+			colDiv1.className ="col-sm-4";
+			var doctorSelectList = document.createElement("select");
+			doctorSelectList.className ="form-control";
+			doctorSelectList.style.display="inline";
 			doctorSelectList.id = "doctorSelect";
 			
 			$('#selectionRow').on('change', '#doctorSelect', function(){
 				handleDoctorSelect();
 			});
 
-			selectionRow.appendChild(doctorSelectList);
+			colDiv1.appendChild(doctorSelectList);
+			selectionRow.appendChild(colDiv1);
 			var docSet =new Set();
-			console.log("details:",details);
 			for(var j=0;j< details.length; j++){
 				docSet.add(details[j].doctor);
 			}
@@ -112,21 +120,22 @@
 			
 			handleDoctorSelect();
 		}
-	}
+	};
+
 	handleChangeType();
+
 		function handleDoctorSelect(){
-			console.trace();
 			var listFilesDiv = document.getElementById("listFiles");
 			listFilesDiv.innerText ="";
 			var doctorSelected = document.getElementById('doctorSelect').value;
-			console.log("in handleDoctorSelect:doctorSelected:".doctorSelected);
 			for(var i=0;i<details.length;i++){
 				if(details[i].doctor ==doctorSelected){
 						var rowDiv1 = document.createElement("div");
 						rowDiv1.className ="row";
 						var colDiv1 = document.createElement("div");
-						colDiv1.className ="col-sm-3"
+						colDiv1.className ="col-sm-3";
 						var fileNameValue = details[i].filename;
+						fileNameValue= fileNameValue.substring(0,fileNameValue.lastIndexOf("."));
 						colDiv1.innerText = fileNameValue;
 						rowDiv1.appendChild(colDiv1);
 						var colDiv2 = document.createElement("div");
@@ -135,11 +144,12 @@
 						rowDiv1.appendChild(colDiv2);
 						var colDiv3 = document.createElement("div");
 						colDiv3.className ="col-sm-3"
-						var dt = new Date(details[i].timestamp);
+						var dt = new Date(Number(details[i].timestamp));
 						var fullDate = dt.getMonth() +1 +"/" + dt.getDate() + "/" +dt.getFullYear();
 						colDiv3.innerText = fullDate;
 						rowDiv1.appendChild(colDiv3);
 						var colDiv4 = document.createElement("div");
+						colDiv4.className ="col-sm-3"
 						var viewButton = document.createElement("button");
 						viewButton.innerText ="View";
 						viewButton.name = fileNameValue;
@@ -163,6 +173,7 @@
 				}
 			}
 	};
+
 	function handleViewButtonClick(filename){
 		   $.ajax({
                 type: "POST",
@@ -177,5 +188,6 @@
             }
           });
 	};
+	
 	
   </script>
