@@ -5,6 +5,7 @@ var LocalStrategy   = require('passport-local').Strategy;
 var User            = require('../models/user.js');
 var Doctor            = require('../models/doctor.js');
 var Patient            = require('../models/patient.js');
+var Guardian            = require('../models/guardian.js');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -65,8 +66,11 @@ module.exports = function(passport) {
                 newUser.data.email    = email;
                 newUser.data.password = newUser.generateHash(password);
 
+                // console.log("req.body in passport signup :", req.body);
+                // console.log("req.body.usertype.value: ", req.body.usertype.value);
 				if(req.body.usertype == 0) newUser.data.role = "Patient";
 				else if(req.body.usertype == 1) newUser.data.role = "Doctor";
+                else if(req.body.usertype == 2) newUser.data.role = "Guardian";
 				else console.log("no proper role for " + req.body.usertype);
 
                 
@@ -85,6 +89,15 @@ module.exports = function(passport) {
                         console.log(" doc profile saved");
                     }
                     else if (newUser.data.role=="Patient"){
+                        Patient.findOne({ 'data.email' :  email }, function(err, data) {
+                            if (err)
+                                return done(err);
+
+                            // check to see if theres already a user with that email
+                            if (data) {
+                                return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
+                            }
+                        });
                         var PatientProfile = new Patient();
                         PatientProfile.data.email = email;
                         PatientProfile.data.firstName = req.body.firstName;
@@ -93,6 +106,16 @@ module.exports = function(passport) {
                             if(err) throw err;
                         });
                         console.log(" patient profile saved");
+                    }
+                    else if (newUser.data.role=="Guardian"){
+                        var GuardianProfile = new Guardian();
+                        GuardianProfile.data.email = email;
+                        GuardianProfile.data.firstName = req.body.firstName;
+                        GuardianProfile.data.lastName = req.body.lastName;
+                        GuardianProfile.save(function(err){
+                            if(err) throw err;
+                        });
+                        console.log(" guardian profile saved");
                     }
                     return done(null, newUser);
                 });

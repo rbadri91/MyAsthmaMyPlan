@@ -1,5 +1,6 @@
 var Doctor            = require('../models/doctor.js');
 var Patient 		  = require('../models/patient.js');
+var Guardian 		  = require('../models/guardian.js');
 module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	var loaded = false;
@@ -16,6 +17,8 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	function(req,res){
 		if(req.user.data.role=="Doctor")
 			res.redirect('/doctor');
+		else if(req.user.data.role=="Guardian")
+			res.redirect('/guardian');
 		else
 			res.redirect('/home');
 	});
@@ -33,7 +36,8 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		else
 			res.redirect('/home');
 	});
-	app.post('/addToPatientList', function(req, res) {
+
+	app.post('/addToPatientList', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		//console.log("addToPatientList req user obj is ", req.body);
 		//console.log("addToPatientList req body obj is ", req.user);
 
@@ -68,9 +72,9 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				
 			});
 	});
-	app.post('/removeFromPendingPatientRequests', function(req, res) {
-		console.log("removeFromPatientList req user obj is ", req.body);
-		console.log("removeFromPatientList req body obj is ", req.user);
+	app.post('/removeFromPendingPatientRequests', isLoggedIn, checkDoctorAuthorization, function(req, res) {
+		//console.log("removeFromPatientList req user obj is ", req.body);
+		//console.log("removeFromPatientList req body obj is ", req.user);
 
 		var patient_email_id = req.body.patientEmail;
 		Doctor.findOne({
@@ -86,10 +90,53 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			});
 	});
 
-	app.post('/doctorRequest', function(req, res) {
-		console.log("email is ", req.body.email);
+	app.post('/addPatient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
+		var output = "Success";
+		//console.log("In /addPatient req body is ", req.body);
 		var user_email_id = req.user.data.email;
-		console.log("user emailid ", user_email_id);
+		//console.log("user emailid ", user_email_id);
+		Guardian.findOne({'data.email':user_email_id},function(err, output) {
+			if(err){
+				output = err;
+			} 
+			else{
+
+				Patient.findOne({ 'data.email' :  req.body.email }, function(err, data) {
+		            // if there are any errors, return the error
+		            if (err){
+		                output = err;
+		            }
+		            // check to see if theres already a user with that email
+		            else if (data) {
+		            	if(output.data.patient_list.indexOf(req.body.email) < 0){
+		            		output.data.patient_list.push(req.body.email);
+							output.save();
+		            	}
+		            	output = "Patient already exists.";
+					}
+					else {
+						var PatientProfile = new Patient();
+			            PatientProfile.data.email = req.body.email;
+			            PatientProfile.data.firstName = req.body.firstName;
+			            PatientProfile.data.lastName = req.body.lastName;
+			            PatientProfile.save(function(err){
+			                if(err) throw err;
+			            console.log(" patient profile saved");
+	            		});
+	            		output.data.patient_list.push(req.body.email);
+						output.save();
+						output = "New patient created.";
+					}
+            	});
+			}	
+		});
+		res.send(output);
+	});
+
+	app.post('/doctorRequest', isLoggedIn, function(req, res) {
+		//console.log("email is ", req.body.email);
+		var user_email_id = req.user.data.email;
+		//console.log("user emailid ", user_email_id);
 		Doctor.findOne({'data.email':req.body.email},function(err, output) {
 			if(err) return err;
 			output.data.pending_patient_requests.push(user_email_id);
@@ -104,19 +151,41 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		Doctor.findOne({'data.email':req.user.data.email},function(err, output) {
 			if(err) return err;
 			pending_patient_Requests = output.data.pending_patient_requests;
-			console.log("output.data:",output.data);
-			console.log("pending_patient_Requests in routes:",pending_patient_Requests);
+			//console.log("output.data:",output.data);
+			//console.log("pending_patient_Requests in routes:",pending_patient_Requests);
 			patientList = output.data.patient_list;
-			console.log("req.user:",req.user);
+			//console.log("req.user:",req.user);
 			userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
 			res.render('doctor', {title: 'doctor', usr: req.user,pList: patientList,pendingPList:pending_patient_Requests,usrDetails:userDetails});
 			loaded = true;
 		});
 		
 	});
+
+	app.get('/guardian', isLoggedIn, checkGuardianAuthorization, function(req, res) {
+		var patientList;
+		Guardian.findOne({'data.email':req.user.data.email},function(err, output) {
+			if(err) return err;
+			//pending_patient_Requests = output.data.pending_patient_requests;
+			//console.log("output.data:",output.data);
+			//console.log("pending_patient_Requests in routes:",pending_patient_Requests);
+			patientList = output.data.patient_list;
+			//console.log("patient list in guardian : ", patientList)
+			//console.log("req.user:",req.user);
+			userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+			res.render('guardian', {title: 'guardian', usr: req.user,pList: patientList,usrDetails:userDetails});
+			loaded = true;
+		});
+		
+	});
+
 	app.get('/home', isLoggedIn,function(req, res) {
+		// console.log("in /home - req.user: ", req.user);
+		// console.log("in /home - session: ", req.session);
 		if(req.user.data.role=="Doctor")
 			res.redirect('/doctor');
+		else if(req.user.data.role=="Guardian")
+			res.redirect('/guardian');
 		else {
 			req.session.patientSelected = req.user.data.email;
 			Patient.findOne({'data.email':req.user.data.email},function(err, output) {
@@ -134,7 +203,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	});
 
 	app.post('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
-		console.log("req.body",req.body);
+		//console.log("req.body",req.body);
 		req.session.patientSelected = req.body.patient_data;
 		res.send("Success");
 	});
@@ -192,18 +261,18 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		
 		var Tex1 = req.body.MyPlanDataUri;
 		var patient_id_path = MAMP_files_path + "/" + req.session.patientSelected;
-		console.log("in  send route + patient id is ", patient_id_path);
+		//console.log("in  send route + patient id is ", patient_id_path);
 		if (!fs.existsSync(patient_id_path)){
 			fs.mkdirSync(patient_id_path);
 		}
 
 		//GET NUMBER OF CURRENT FILES IN PATIENT_ID_PATH DIR
 		var no_files = 0;
-		console.log("Going to read directory ", patient_id_path);
+		//console.log("Going to read directory ", patient_id_path);
 		var files = fs.readdirSync(patient_id_path);
 		no_files = files.length;
 
-		console.log("no of files ", no_files);
+		//console.log("no of files ", no_files);
 		var curr_file_no = no_files + 1;
 		var newFile = patient_id_path + "/MyPlan" + curr_file_no + ".txt";
 		fs.writeFile(newFile, Tex1, (err) => {
@@ -218,11 +287,11 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 		var Patient_email = req.session.patientSelected;
 		var doctor_email = req.user.data.email;
-		console.log("before findone + ", Patient_email);
+		//console.log("before findone + ", Patient_email);
 		Patient.findOne({
 			'data.email': Patient_email}, 
 			function(err, output) {
-				console.log("Inside Patient findone ", output);
+				//console.log("Inside Patient findone ", output);
 				if(err){
 					res.send(err);
 					return;	
@@ -233,7 +302,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 					var current_time = new Date().getTime();
 					var file_name = "MyPlan" + curr_file_no + ".txt";
 					output.data.myPlans.push({filename: file_name, doctor: doctor_email, timestamp: current_time});
-                	console.log("new myplan created");
+                	//console.log("new myplan created");
                 	// newPlan.filename = "MyPlan" + curr_file_no + ".txt";
                 	// newPlan.doctor = doctor_email;
                 	// newPlan.timestamp = new Date().getTime();
@@ -263,9 +332,9 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				} 
 
 				if(output){
-                	console.log("getting patient history");
+                	//console.log("getting patient history");
                 	var myPlans = output.data.myPlans;
-                	console.log(myPlans);
+                	//console.log(myPlans);
                 	// res.send("get patient history call was successful.");
                 	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails,fileDetails:JSON.stringify(myPlans)});
 					return;
@@ -294,6 +363,14 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		else
 			res.redirect('/home');
 	};
+
+	function checkGuardianAuthorization(req, res, next) {
+		if(req.user.data.role=="Guardian")
+			return next();
+		else
+			res.redirect('/home');
+	};
+
 
 	function isPatientSelected(req, res, next) {
 		if(req.session.patientSelected){
