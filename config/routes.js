@@ -225,12 +225,12 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		loaded = true;
 	});
 
-	app.post('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, function(req, res) {
+	app.post('/viewPatientProfile', isLoggedIn, checkDoctororGuardianAuthorization, function(req, res) {
 		//console.log("req.body",req.body);
 		req.session.patientSelected = req.body.patient_data;
 		res.send("Success");
 	});
-	app.get('/viewPatientProfile', isLoggedIn, checkDoctorAuthorization, isPatientSelected, function(req, res) {
+	app.get('/viewPatientProfile', isLoggedIn, checkDoctororGuardianAuthorization, isPatientSelected, function(req, res) {
 		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user,usrDetails:userDetails});
 		loaded = true;
 	});
@@ -384,10 +384,20 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	function checkDoctorAuthorization(req, res, next) {
 		if(req.user.data.role=="Doctor")
 			return next();
+		else if(req.user.data.role=="Guardian"){
+			res.redirect("/viewPatientProfile");
+		}
 		else
 			res.redirect('/home');
 	};
 
+	function checkDoctororGuardianAuthorization(req,res,next) {
+		if(req.user.data.role=="Doctor" || req.user.data.role=="Guardian"){
+			return next();
+		}else{
+			res.redirect('/home');
+		}
+	}
 	function checkGuardianAuthorization(req, res, next) {
 		if(req.user.data.role=="Guardian")
 			return next();

@@ -3,13 +3,14 @@
 </head>
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-<nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
+<nav class="navbar navbar-default pull-right">
     <ul class="nav navbar-nav">
        <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <button type="button" onclick="document.location.href='/logout'"class="btn btn-default navbar-btn">Log Out</button>
+      <li><button type="button" onclick="document.location.href='/logout'"  class="btn btn-default navbar-btn pull-right">Log Out</button></li>
     </ul>
-  </nav>
+</nav>
 <div class="doctorPage">
 <div id = "patientListVal" style="visibility:hidden"><%=pList%></div>
 <div id = "pendingPatientListVal" style="visibility:hidden"><%=pendingPList%></div>
@@ -38,7 +39,7 @@
     <br>
     <br>
     <div class="text-center">
-     <a  style="  text-decoration: underline" id ="PatientProfile" class ="lead" onclick ="viewPatientPostRequest(this)" style="visibility:hidden"></a>
+     <a  style="text-decoration: underline ;visibility:hidden" id ="PatientProfile" class ="lead" onclick ="viewPatientPostRequest(this)"></a>
     </div>
     <br>
     <br>

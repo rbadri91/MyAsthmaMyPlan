@@ -4,10 +4,11 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=0.8" />
 <nav class="navbar navbar-default pull-right" ng-controller="NavCtrl">
     <ul class="nav navbar-nav">
       <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <li><a href="/logout">Log Out</a></li>
+      <button type="button" onclick="document.location.href='/logout'"class="btn btn-default navbar-btn pull-right">Log Out</button>
     </ul>
   </nav>
 <div class="my-asthma-my-plan-page">

@@ -73,19 +73,20 @@
           <button type="button" class="btn btn-warning btn-lg" onclick="HideDeletePatientForm()">Cancel</button>
           </div>
         </form>
-        </div>
         <br>
         <br>
         <div class="text-center">
-         <a  style="  text-decoration: underline" id="PatientProfile" class="lead" onclick="viewPatientPostRequest(this)" style="visibility:hidden"></a>
+         <a  style="text-decoration: underline;visibility:hidden" id="PatientProfile" class="lead" onclick="viewPatientPostRequest(this)"></a>
        </div>
        <br>
        <br>
+        </div>
      </div>
    </div>
  </div>
-</div>
 <script type="text/javascript">
+
+
 
   function ShowAddPatientForm () {
     $("#Add_patient_button").hide();
@@ -109,16 +110,13 @@
   function viewPatientPostRequest(){
 
     $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
+      console.log("success in guardian");
       location.href = '/viewPatientProfile';
     });
   }
 
   $(document).ready(function () {
-   $("#dropDownUl li").on('click', function () {
-    patientEmail = this.innerText;
-    document.getElementById("PatientProfile").style.visibility="visible";
-    document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
-  });
+
    $("#sendAddPatientRequest").on('click', function() {
     var firstName_ = $("#firstName").val();
     var lastName_ = $("#LastName").val();
@@ -151,7 +149,6 @@
    });
    var elm = document.getElementById('dropDownUl');
    var patients= document.getElementById('patientListVal').innerHTML;
-   console.log(patients);
    if(!patients==""){
     var patientsLists = patients.split(",");
     for(var i=0;i<patientsLists.length;i++){
@@ -161,6 +158,12 @@
       elm.appendChild(lielem);
     }
   }
+
+  $("#dropDownUl li").on('click', function () {
+    patientEmail = this.innerText;
+    document.getElementById("PatientProfile").style.visibility="visible";
+    document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
+  });
 
 });
 </script>
