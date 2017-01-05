@@ -109,9 +109,9 @@
   var patientEmail;
   function viewPatientPostRequest(){
 
-    $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
-      console.log("success in guardian");
-      location.href = '/viewPatientProfile';
+    $.post("/patientHome",{patient_data:patientEmail}, function(json) { 
+
+      location.href = '/patientHome';
     });
   }
 

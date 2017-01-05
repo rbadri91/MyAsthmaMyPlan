@@ -10,6 +10,7 @@
     <ul class="nav navbar-nav">
      <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
       <button type="button" onclick="document.location.href='/logout'"class="btn btn-default navbar-btn">Log Out</button>
+      <button type="button" id="homeButton" onclick="handleReturnHome()" class="btn btn-default navbar-btn">Home</button>
     </ul>
   </nav>
   <div class="PlanHistoryPage">
@@ -17,6 +18,7 @@
   	<br>
   	<br>
   	<div id ="fileDetails" style="visibility:hidden"><%= fileDetails%></div>
+  	<div id = "usrDesc" style="visibility:hidden"><%= usr%></div>
   	<div id ="selectionRow" class ="row text-center">
   	<div class="col-sm-4"></div>
   	<div class="col-sm-4 center-block">	<select id ="SelectType" onchange="handleChangeType()" class="form-control input-xxlarge" style ="display: inline" data-style="btn-primary">
@@ -172,6 +174,24 @@
 						listFilesDiv.appendChild(rowDiv1);
 				}
 			}
+	};
+	console.log("role her:",JSON.parse(document.getElementById("usrDesc").innerHTML));
+	var userDetails = JSON.parse(document.getElementById("usrDesc").innerHTML);
+	var role = userDetails.data.role;
+
+	function handleReturnHome(){
+		console.log("in handleReturnHome");
+		var destination;
+		if(role=="Patient"){
+			destination = "/home";
+		}else if(role=="Doctor"){
+			destination = "/viewPatientProfile";
+		}else{
+			destination = "/patientHome";
+		}
+		console.log("");
+         location.href = destination;
+
 	};
 
 	function handleViewButtonClick(filename){
