@@ -90,8 +90,8 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			});
 	});
 
-	app.post('/addPatient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
-		var output = "Success";
+	app.post('/delete_patient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
+		var return_out = "Success";
 		//console.log("In /addPatient req body is ", req.body);
 		var user_email_id = req.user.data.email;
 		//console.log("user emailid ", user_email_id);
@@ -100,11 +100,34 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				output = err;
 			} 
 			else{
+            	if(output.data.patient_list.indexOf(req.body.email) >= 0){
+            		output.data.patient_list.pull(req.body.email);
+					output.save();
+					return_out = "Patient deleted from list successfully.";
+            	}
+            	else{
+            		return_out = "Patient doesn't exists.";
+            	}
+			}
+		});
+		res.send(return_out);
+	});
+
+	app.post('/addPatient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
+		var return_output = "Success";
+		//console.log("In /addPatient req body is ", req.body);
+		var user_email_id = req.user.data.email;
+		//console.log("user emailid ", user_email_id);
+		Guardian.findOne({'data.email':user_email_id},function(err, output) {
+			if(err){
+				return_output = err;
+			} 
+			else{
 
 				Patient.findOne({ 'data.email' :  req.body.email }, function(err, data) {
 		            // if there are any errors, return the error
 		            if (err){
-		                output = err;
+		                return_output = err;
 		            }
 		            // check to see if theres already a user with that email
 		            else if (data) {
@@ -112,7 +135,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		            		output.data.patient_list.push(req.body.email);
 							output.save();
 		            	}
-		            	output = "Patient already exists.";
+		            	return_output = "Patient already exists.";
 					}
 					else {
 						var PatientProfile = new Patient();
@@ -125,12 +148,12 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	            		});
 	            		output.data.patient_list.push(req.body.email);
 						output.save();
-						output = "New patient created.";
+						return_output = "New patient created.";
 					}
             	});
 			}	
 		});
-		res.send(output);
+		res.send(return_output);
 	});
 
 	app.post('/doctorRequest', isLoggedIn, function(req, res) {

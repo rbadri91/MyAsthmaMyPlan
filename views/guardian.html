@@ -31,11 +31,11 @@
           <br>
           <br>
           <div class="row" id="Add_patient_button">           
-          <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: plum" onclick="ShowAddPatientFrom()">Add Patient</button></div>
+            <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: plum" onclick="ShowAddPatientForm()">Add Patient</button></div>
           </div>
           <form class="register-form" id="add_patient_form" method='post' style="display:none">
-            
-              <div class="form-group">
+
+            <div class="form-group">
               <label for="firstName">Patient FirstName:</label>
               <input class="form-control" id="firstName" placeholder="First Name" name ="firstName">
             </div>
@@ -48,30 +48,61 @@
               <input type="email" class="form-control" id="email" placeholder="Email Address" name ="email">
             </div>
             
+            <div class="form-group" >
             <button class="btn btn-warning btn-lg" id="sendAddPatientRequest">Add Patient</button>
+            </div>
+            <div class="form-group" >
             <button type="button" class="btn btn-warning btn-lg" onclick="HideAddPatientForm()">Cancel</button>
+            </div>
           </form>
+        <!-- </div> -->
+        <!-- <br> -->
+        <br>
+        <div class="row" id="Delete_patient_button">           
+        <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: turquoise" onclick="ShowDeletePatientForm()">Delete a patient</button></div>
+        </div>
+        <form class="register-form" id="delete_patient_form" method='post' style="display:none">
+          <div class="form-group" >
+            <label for="email">Patient's Email:</label>
+            <input type="email" class="form-control" id="delete_email" placeholder="Email Address" name ="email">
           </div>
-          <br>
-          <br>
-          <div class="text-center">
-           <a  style="  text-decoration: underline" id="PatientProfile" class="lead" onclick="viewPatientPostRequest(this)" style="visibility:hidden"></a>
-         </div>
-         <br>
-         <br>
+          <div class="form-group" >
+          <button class="btn btn-warning btn-lg" id="sendDeletePatientRequest">Delete this Patient</button>
+          </div>
+          <div class="form-group" >
+          <button type="button" class="btn btn-warning btn-lg" onclick="HideDeletePatientForm()">Cancel</button>
+          </div>
+        </form>
+        </div>
+        <br>
+        <br>
+        <div class="text-center">
+         <a  style="  text-decoration: underline" id="PatientProfile" class="lead" onclick="viewPatientPostRequest(this)" style="visibility:hidden"></a>
        </div>
+       <br>
+       <br>
      </div>
    </div>
  </div>
- <script type="text/javascript">
+</div>
+<script type="text/javascript">
 
-  function ShowAddPatientFrom () {
-        $("#Add_patient_button").hide();
-        $("#add_patient_form").show();
+  function ShowAddPatientForm () {
+    $("#Add_patient_button").hide();
+    $("#add_patient_form").show();
   }
   function HideAddPatientForm () {
-        $("#Add_patient_button").show();
-        $("#add_patient_form").hide();
+    $("#Add_patient_button").show();
+    $("#add_patient_form").hide();
+  }
+
+  function ShowDeletePatientForm () {
+    $("#Delete_patient_button").hide();
+    $("#delete_patient_form").show();
+  }
+  function HideDeletePatientForm () {
+    $("#Delete_patient_button").show();
+    $("#delete_patient_form").hide();
   }
 
   var patientEmail;
@@ -89,36 +120,48 @@
     document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
   });
    $("#sendAddPatientRequest").on('click', function() {
-      var firstName_ = $("#firstName").val();
-      var lastName_ = $("#LastName").val();
-      var email_ = $("#email").val();
-      $.ajax({
-                type: "POST",
-                url: "/addPatient",
-                data: { firstName:firstName_, lastName: lastName_, email: email_},
-                success: function(result){
-                  //alert("success from /addToPatientList");
-                  //console.log("result:",result);
-                  location.href= "/guardian";
-                },
-              error: function(result) {
-                  alert('error');
-              }
-      });
-   });
-    var elm = document.getElementById('dropDownUl');
-    var patients= document.getElementById('patientListVal').innerHTML;
-    console.log(patients);
-    if(!patients==""){
-      var patientsLists = patients.split(",");
-      for(var i=0;i<patientsLists.length;i++){
-
-        var lielem= document.createElement("li");
-        lielem.innerText = patientsLists[i];
-        elm.appendChild(lielem);
+    var firstName_ = $("#firstName").val();
+    var lastName_ = $("#LastName").val();
+    var email_ = $("#email").val();
+    $.ajax({
+      type: "POST",
+      url: "/addPatient",
+      data: { firstName:firstName_, lastName: lastName_, email: email_},
+      success: function(result){
+        location.href= "/guardian";
+      },
+      error: function(result) {
+        alert('error');
       }
-    }
+    });
+  });
+   $("#sendDeletePatientRequest").on('click', function () {
+    var email_ = $("#delete_email").val();
+    $.ajax({
+      type: "POST",
+      url: "/delete_patient",
+      data: { email: email_},
+      success: function(result){
+        location.href= "/guardian";
+      },
+      error: function(result) {
+        alert('error');
+      }
+    });
+   });
+   var elm = document.getElementById('dropDownUl');
+   var patients= document.getElementById('patientListVal').innerHTML;
+   console.log(patients);
+   if(!patients==""){
+    var patientsLists = patients.split(",");
+    for(var i=0;i<patientsLists.length;i++){
 
- });
+      var lielem= document.createElement("li");
+      lielem.innerText = patientsLists[i];
+      elm.appendChild(lielem);
+    }
+  }
+
+});
 </script>
 </div>
