@@ -265,9 +265,10 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				if(output){
                 	console.log("getting patient history");
                 	var myPlans = output.data.myPlans;
+                	var patientDetails= {fName:output.data.firstName,lName:output.data.lastName};
                 	console.log(myPlans);
                 	// res.send("get patient history call was successful.");
-                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails,fileDetails:JSON.stringify(myPlans)});
+                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails,fileDetails:JSON.stringify(myPlans),pDetails:patientDetails});
 					return;
 				}
 			});
