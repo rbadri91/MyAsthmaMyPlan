@@ -146,6 +146,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			                if(err) throw err;
 			            console.log(" patient profile saved");
 	            		});
+	            		console.log("req.body.email here profile saved case:"+req.body.email);
 	            		output.data.patient_list.push(req.body.email);
 						output.save();
 						return_output = "New patient created.";
@@ -158,14 +159,19 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	app.post('/doctorRequest', isLoggedIn, function(req, res) {
 		//console.log("email is ", req.body.email);
-		var user_email_id = req.user.data.email;
+		var user_email_id = req.session.patientSelected;
 		//console.log("user emailid ", user_email_id);
 		Doctor.findOne({'data.email':req.body.email},function(err, output) {
 			if(err) return err;
 			output.data.pending_patient_requests.push(user_email_id);
 			output.save();
 		});
-		res.redirect('/home');
+		if(req.user.data.role=="Patient"){
+				res.redirect('/home');
+		}else{
+			res.redirect('/patientHome');
+		}
+		
 	});
 	var userDetails={};
 
@@ -193,7 +199,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			//console.log("output.data:",output.data);
 			//console.log("pending_patient_Requests in routes:",pending_patient_Requests);
 			patientList = output.data.patient_list;
-			//console.log("patient list in guardian : ", patientList)
+			console.log("patient list in guardian : ", patientList)
 			//console.log("req.user:",req.user);
 			userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
 			res.render('guardian', {title: 'guardian', usr: req.user,pList: patientList,usrDetails:userDetails});
@@ -214,12 +220,24 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			Patient.findOne({'data.email':req.user.data.email},function(err, output) {
 				if(err) return err;
 				userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
-				res.render('home', {title: 'Home', usr: req.user,usrDetails:userDetails});
-				loaded = true;
+				res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails});
+				loaded = true
 			});
 			
 		}
 	});
+
+	app.post('/patientHome', isLoggedIn, checkDoctororGuardianAuthorization, function(req, res) {
+
+		req.session.patientSelected = req.body.patient_data;
+		res.send("Success");
+	});
+
+	app.get('/patientHome', isLoggedIn, checkGuardianAuthorization, function(req, res) {
+		res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails});
+		loaded = true;
+	});
+
 	app.get('/fileupload', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		res.render('fileupload', {title: 'FileUpload', usr: req.user ,usrDetails:userDetails});
 		loaded = true;
@@ -360,7 +378,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
                 	//console.log(myPlans);
                 	var patientDetails= {fName:output.data.firstName,lName:output.data.lastName};
                 	// res.send("get patient history call was successful.");
-                	res.render('MyPlanHistory', {title: 'My Plan History', usr: req.user,usrDetails:userDetails,fileDetails:JSON.stringify(myPlans),pDetails:patientDetails});
+                	res.render('MyPlanHistory', {title: 'My Plan History', usr: JSON.stringify(req.user),usrDetails:userDetails,fileDetails:JSON.stringify(myPlans),pDetails:patientDetails});
 					return;
 				}
 			});
