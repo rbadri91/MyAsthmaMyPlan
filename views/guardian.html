@@ -33,7 +33,7 @@
           <div class="row" id="Add_patient_button">           
             <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: plum" onclick="ShowAddPatientForm()">Add Patient</button></div>
           </div>
-          <form class="register-form" id="add_patient_form" method='post' style="display:none">
+          <form class="register-form" id="add_patient_form" style="display:none">
 
             <div class="form-group">
               <label for="firstName">Patient FirstName:</label>
@@ -61,7 +61,7 @@
         <div class="row" id="Delete_patient_button">           
         <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: turquoise" onclick="ShowDeletePatientForm()">Delete a patient</button></div>
         </div>
-        <form class="register-form" id="delete_patient_form" method='post' style="display:none">
+        <div id="delete_patient_form" style="display:none">
           <div class="form-group" >
             <label for="email">Patient's Email:</label>
             <input type="email" class="form-control" id="delete_email" placeholder="Email Address" name ="email">
@@ -72,7 +72,7 @@
           <div class="form-group" >
           <button type="button" class="btn btn-warning btn-lg" onclick="HideDeletePatientForm()">Cancel</button>
           </div>
-        </form>
+        </div>
         <br>
         <br>
         <div class="text-center">
@@ -125,11 +125,12 @@
       type: "POST",
       url: "/addPatient",
       data: { firstName:firstName_, lastName: lastName_, email: email_},
+      async: false,
       success: function(result){
         location.href= "/guardian";
       },
       error: function(result) {
-        alert('error');
+        alert("Error");
       }
     });
   });
@@ -139,11 +140,12 @@
       type: "POST",
       url: "/delete_patient",
       data: { email: email_},
+      async: false,
       success: function(result){
-        location.href= "/guardian";
+        location.href = "/guardian";
       },
       error: function(result) {
-        alert('error');
+        alert("Error");
       }
     });
    });

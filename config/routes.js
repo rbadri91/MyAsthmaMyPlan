@@ -40,18 +40,19 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 	app.post('/addToPatientList', isLoggedIn, checkDoctorAuthorization, function(req, res) {
 		//console.log("addToPatientList req user obj is ", req.body);
 		//console.log("addToPatientList req body obj is ", req.user);
-
+		var return_output = "Success";
 		var patient_email_id = req.body.patientEmail;
 		Doctor.findOne({
 			'data.email': req.user.data.email}, 
 			function(err, output) {
 				console.log("Inside Doctor findone ", output);
 				if(err){
-					res.send(err);
-					return;	
+					//res.send(err);
+					return_output = err;
+					//return;	
 				} 
 
-				if(output){
+				else if(output){
 					if(output.data.patient_list){
 						console.log("Searching patient in doc's patient_list");
 						var search_out = output.data.patient_list.indexOf(patient_email_id);
@@ -60,14 +61,19 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 							output.data.pending_patient_requests.pull(patient_email_id);
 							console.log("Patient already exists in Patient List");
 							output.save();
-							res.send("Patient already exists in Patient List");
-							return;
+							return_output = "Patient already exists in Patient List";
+							//res.send("Patient already exists in Patient List");
+							//return;
 						}
 					}
+				else{
 					output.data.patient_list.push(patient_email_id);
 					output.data.pending_patient_requests.pull(patient_email_id);
 					output.save();
-					res.send("Patient successfully added to Patient List");
+					return_output = "Patient successfully added to Patient List";
+				}
+					
+					res.send(return_output);
 				}
 				
 			});
@@ -120,6 +126,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		//console.log("user emailid ", user_email_id);
 		Guardian.findOne({'data.email':user_email_id},function(err, output) {
 			if(err){
+				console.log("error in searching in guardian model");
 				return_output = err;
 			} 
 			else{
@@ -127,6 +134,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 				Patient.findOne({ 'data.email' :  req.body.email }, function(err, data) {
 		            // if there are any errors, return the error
 		            if (err){
+		            	console.log("error in searching in patient model");
 		                return_output = err;
 		            }
 		            // check to see if theres already a user with that email
@@ -134,8 +142,10 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		            	if(output.data.patient_list.indexOf(req.body.email) < 0){
 		            		output.data.patient_list.push(req.body.email);
 							output.save();
+							//console.log("Just after patient_list updated :", output.data.patient_list);
 		            	}
 		            	return_output = "Patient already exists.";
+		            	console.log(return_output);
 					}
 					else {
 						var PatientProfile = new Patient();
@@ -143,18 +153,21 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			            PatientProfile.data.firstName = req.body.firstName;
 			            PatientProfile.data.lastName = req.body.lastName;
 			            PatientProfile.save(function(err){
-			                if(err) throw err;
-			            console.log(" patient profile saved");
+			                if(err){ console.log("Some error in saving patient profile"); throw err;} 
+			            	//console.log(" patient profile saved");
 	            		});
-	            		console.log("req.body.email here profile saved case:"+req.body.email);
+	            		//console.log("req.body.email here profile saved case: ", req.body.email);
 	            		output.data.patient_list.push(req.body.email);
 						output.save();
+						//console.log("Just after patient_list updated :", output.data.patient_list);
 						return_output = "New patient created.";
 					}
+					res.send("return_output");
             	});
 			}	
 		});
-		res.send(return_output);
+		
+		//setTimeout(function() {console.log("I am here."); res.send(return_output);}, 5000);
 	});
 
 	app.post('/doctorRequest', isLoggedIn, function(req, res) {
@@ -199,7 +212,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			//console.log("output.data:",output.data);
 			//console.log("pending_patient_Requests in routes:",pending_patient_Requests);
 			patientList = output.data.patient_list;
-			console.log("patient list in guardian : ", patientList)
+			//console.log("patient list in guardian : ", patientList)
 			//console.log("req.user:",req.user);
 			userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
 			res.render('guardian', {title: 'guardian', usr: req.user,pList: patientList,usrDetails:userDetails});
