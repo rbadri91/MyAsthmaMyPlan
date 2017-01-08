@@ -69,8 +69,8 @@
 		var selectType = document.getElementById('SelectType').value;
 		var selectionRow = document.getElementById("selectionRow");
 		if(selectType =="Recently Uploaded"){
-			if(document.getElementById("doctorSelect")){
-				selectionRow.removeChild(document.getElementById("doctorSelect"));
+			if(document.getElementById("doctorSelectCol")){
+				selectionRow.removeChild(document.getElementById("doctorSelectCol"));
 			}
 			for(var i=0;i<details.length;i++){
 					var rowDiv = document.createElement("div");
@@ -117,6 +117,7 @@
 		}else if(selectType =="Doctor")	{
 			var colDiv1 = document.createElement("div"); //.form-control
 			colDiv1.className ="col-sm-4";
+			colDiv1.id ="doctorSelectCol";
 			var doctorSelectList = document.createElement("select");
 			doctorSelectList.className ="form-control";
 			doctorSelectList.style.display="inline";
