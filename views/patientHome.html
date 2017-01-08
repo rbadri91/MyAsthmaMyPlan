@@ -5,13 +5,28 @@
 </head>
 <meta name="viewport" content="width=device-width, initial-scale=0.8" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-<nav class="navbar navbar-default pull-right">
-    <ul class="nav navbar-nav">
-      <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <button type="button" onclick="document.location.href='/logout'" class="btn btn-default navbar-btn pull-right">Log Out</button>
-      <button type="button" id="homeButton" onclick="document.location.href='/home'" class="btn btn-default navbar-btn">Home</button>
-    </ul>
-  </nav>
+
+<nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">My Asthma App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
+            <li class="active"><a href="/home">Home</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+<header><h3 class ="text-center"><%=pDetails.firstName %> <%= pDetails.lastName%></h3></header>
 <div class="newcontainer">
  <div class="my-row special">
   <div class="v-m">
@@ -30,7 +45,7 @@
       </div>
     </div>
     <div class="row">
-    <div class="col-sm-12"><button class="btn btn-primary btn-md btn-lg" style="background-color: lightpink">Patient Log</button></div>
+      <div class="col-sm-12"><button class="btn btn-primary btn-md btn-lg" style="background-color: lightpink">Patient Log</button></div>
     </div>
     <div class="row">
       <div class="col-sm-12"><button class="btn btn-primary btn-lg btn-block" style="background-color: cornflowerblue">How are you feeling today</button>
@@ -53,32 +68,32 @@
     <button class="btn btn-warning btn-lg">Send Request</button>
     <button type="button" class="btn btn-warning btn-lg" onclick="HideSendRequestForm()">Cancel</button>
   </form>
-<!-- </div> -->
-<!-- </div> -->
+  <!-- </div> -->
+  <!-- </div> -->
 </div>
 </div>
 </div>
 </div>
 <script>
-$("#Add_doctor_button").hide();
-function PlanHistory(){
+  $("#Add_doctor_button").hide();
+  function PlanHistory(){
    $.ajax({
-                type: "GET",
-                url: "/getPatientHistory",
-                success: function(result){
-                  console.log("success");
-                },
-              error: function(result) {
-                  alert('error');
-              }
-          });
-}
-function ShowSendRequestForm () {
-        $("#Add_doctor_button").hide();
-        $("#send_request_form").show();
+    type: "GET",
+    url: "/getPatientHistory",
+    success: function(result){
+      console.log("success");
+    },
+    error: function(result) {
+      alert('error');
+    }
+  });
+ }
+ function ShowSendRequestForm () {
+  $("#Add_doctor_button").hide();
+  $("#send_request_form").show();
 }
 function HideSendRequestForm () {
-        $("#Add_doctor_button").show();
-        $("#send_request_form").hide();
+  $("#Add_doctor_button").show();
+  $("#send_request_form").hide();
 }
 </script>

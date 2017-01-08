@@ -5,135 +5,150 @@
 <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <link rel="stylesheet" type="text/css" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
-<nav class="navbar navbar-default pull-right">
-    <ul class="nav navbar-nav">
-       <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <li><button type="button" onclick="document.location.href='/logout'"  class="btn btn-default navbar-btn pull-right">Log Out</button></li>
-    </ul>
-</nav>
+<nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">My Asthma App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
+            <li class="active"><a href="/home">Home</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
 <div class="doctorPage">
-<div id = "patientListVal" style="visibility:hidden"><%=pList%></div>
-<div id = "pendingPatientListVal" style="visibility:hidden"><%=pendingPList%></div>
- <div class="newcontainer">
-  <div class="my-row special">
-  <div class="v-m">
-  <div class="form center-block ">
-    <div class="row">
-      <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
-      <span class="caret"></span>
-      </button>
-      <ul id = "dropDownUl" class="dropdown-menu" style="width: 100%"></ul>
-      </div>
-    </div>
-    <br>
-    <br>
-    <div class="row">
-      <div class="dropdown">
-      <button class="btn btn-primary dropdown-toggle" style="background-color: grey" id = "pendingPatientList" type="button" data-toggle="dropdown">Pending Patient Requests
-      <span class="caret"></span>
-      </button>
-      <ul id = "dropDownPending" class="dropdown-menu" style="width: 100%"></ul>
-      </div>
-    </div>
-    <br>
-    <br>
-    <div class="text-center">
-     <a  style="text-decoration: underline ;visibility:hidden" id ="PatientProfile" class ="lead" onclick ="viewPatientPostRequest(this)"></a>
-    </div>
-    <br>
-    <br>
-  </div>
-  </div>
-  </div>
-  </div>
-    <script type="text/javascript">
+  <div id = "patientListVal" style="visibility:hidden"><%=pList%></div>
+  <div id = "pendingPatientListVal" style="visibility:hidden"><%=pendingPList%></div>
+  <div class="newcontainer">
+    <div class="my-row special">
+      <div class="v-m">
+        <div class="form center-block ">
+          <div class="row">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" id = "patientList" type="button" data-toggle="dropdown">Choose Patient
+                <span class="caret"></span>
+              </button>
+              <ul id = "dropDownUl" class="dropdown-menu" style="width: 100%"></ul>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="row">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" style="background-color: grey" id = "pendingPatientList" type="button" data-toggle="dropdown">Pending Patient Requests
+                <span class="caret"></span>
+              </button>
+              <ul id = "dropDownPending" class="dropdown-menu" style="width: 100%"></ul>
+            </div>
+          </div>
+          <br>
+          <br>
+          <div class="text-center">
+           <a  style="text-decoration: underline ;visibility:hidden" id ="PatientProfile" class ="lead" onclick ="viewPatientPostRequest(this)"></a>
+         </div>
+         <br>
+         <br>
+       </div>
+     </div>
+   </div>
+ </div>
+ <script type="text/javascript">
 
-      (function() {
-        var elm = document.getElementById('dropDownUl');
-        var patients= document.getElementById('patientListVal').innerHTML;
-        if(!patients==""){
-          var patientsLists = patients.split(",");
-          for(var i=0;i<patientsLists.length;i++){
+  (function() {
+    var elm = document.getElementById('dropDownUl');
+    var patients= document.getElementById('patientListVal').innerHTML;
+    if(!patients==""){
+      var patientsLists = patients.split(",");
+      for(var i=0;i<patientsLists.length;i++){
 
-            var lielem= document.createElement("li");
-            lielem.innerText = patientsLists[i];
-            elm.appendChild(lielem);
-          }
-        }
+        var lielem= document.createElement("li");
+        lielem.innerText = patientsLists[i];
+        elm.appendChild(lielem);
+      }
+    }
 
-         var pendingelm = document.getElementById('dropDownPending');
-        var pendingPatients= document.getElementById('pendingPatientListVal').innerHTML;
-        if(pendingPatients=="")return;
+    var pendingelm = document.getElementById('dropDownPending');
+    var pendingPatients= document.getElementById('pendingPatientListVal').innerHTML;
+    if(pendingPatients=="")return;
 
-        var pendingPatientsLists = pendingPatients.split(",");
+    var pendingPatientsLists = pendingPatients.split(",");
 
-        for(var i=0;i<pendingPatientsLists.length;i++){
+    for(var i=0;i<pendingPatientsLists.length;i++){
 
-          var pendinglielem= document.createElement("li");
-          pendinglielem.appendChild(document.createTextNode(pendingPatientsLists[i]));
-          var atag = document.createElement("a");
-          atag.innerHTML = "Accept";
-          atag.style.textDecoration ="underline";
-          atag.style.display="inline";
-          atag.onclick= function () { 
-             var parentdata = this.parentNode.innerText;
-             var patientemail =parentdata.replace("AcceptDecline", "");
-              $.ajax({
-                type: "POST",
-                url: "/addToPatientList",
-                data: { patientEmail:patientemail },
-                success: function(result){
+      var pendinglielem= document.createElement("li");
+      pendinglielem.appendChild(document.createTextNode(pendingPatientsLists[i]));
+      var atag = document.createElement("a");
+      atag.innerHTML = "Accept";
+      atag.style.textDecoration ="underline";
+      atag.style.display="inline";
+      atag.onclick= function () { 
+       var parentdata = this.parentNode.innerText;
+       var patientemail =parentdata.replace("AcceptDecline", "");
+       $.ajax({
+        type: "POST",
+        url: "/addToPatientList",
+        data: { patientEmail:patientemail },
+        success: function(result){
                   //alert("success from /addToPatientList");
                   //console.log("result:",result);
                   location.href= "/doctor";
                 },
-              error: function(result) {
+                error: function(result) {
                   alert('error');
-              }
-          });
-          };
-          pendinglielem.appendChild(atag);
+                }
+              });
+     };
+     pendinglielem.appendChild(atag);
 
-          var atag1 = document.createElement("a");
-          atag1.innerHTML = "Decline";
-          atag1.style.display="inline";
-          atag1.style.textDecoration ="underline";
-          atag1.onclick= function () { 
-              var parentdata = this.parentNode.innerText;
-             var patientemail =parentdata.replace("AcceptDecline", "");
-              $.ajax({
-                type: "POST",
-                url: "/removeFromPendingPatientRequests",
-                 data: { patientEmail:patientemail },
-                 success: function(result){
-                   location.href= "/doctor";
-                },
-            error: function(result) {
-              alert('error');
-            }
-          });
-          };
-          pendinglielem.appendChild(atag1);
-          pendingelm.appendChild(pendinglielem);
-        }
-
-      }());
-      var patientEmail;
-      function viewPatientPostRequest(){
-        
-        $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
-          location.href = '/viewPatientProfile';
-        });
+     var atag1 = document.createElement("a");
+     atag1.innerHTML = "Decline";
+     atag1.style.display="inline";
+     atag1.style.textDecoration ="underline";
+     atag1.onclick= function () { 
+      var parentdata = this.parentNode.innerText;
+      var patientemail =parentdata.replace("AcceptDecline", "");
+      $.ajax({
+        type: "POST",
+        url: "/removeFromPendingPatientRequests",
+        data: { patientEmail:patientemail },
+        success: function(result){
+         location.href= "/doctor";
+       },
+       error: function(result) {
+        alert('error');
       }
+    });
+    };
+    pendinglielem.appendChild(atag1);
+    pendingelm.appendChild(pendinglielem);
+  }
 
-      $(document).ready(function () {
- $("#dropDownUl li").on('click', function () {
+}());
+  var patientEmail;
+  function viewPatientPostRequest(){
+    
+    $.post("/viewPatientProfile",{patient_data:patientEmail}, function(json) {  
+      location.href = '/viewPatientProfile';
+    });
+  }
+
+
+  $(document).ready(function () {
+   $("#dropDownUl li").on('click', function () {
     patientEmail = this.innerText;
-     document.getElementById("PatientProfile").style.visibility="visible";
+    document.getElementById("PatientProfile").style.visibility="visible";
       // document.getElementById("right_arrow").style.visibility="visible";
-     document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
-   });
-});
-  </script>
+      document.getElementById("PatientProfile").innerText = "View profile of " +this.innerText;
+    });
+ });
+</script>
 </div>

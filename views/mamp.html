@@ -7,47 +7,77 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 <script src="https://hammerjs.github.io/dist/hammer.js"></script>
 <script src="http://hammerjs.github.io/dist/hammer-time.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=0.8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
 <body>
-<nav class="navbar navbar-default pull-right">
-    <ul class="nav navbar-nav">
-      <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
-      <button type="button" onclick="document.location.href='/logout'"class="btn btn-default navbar-btn pull-right">Log Out</button>
-    </ul>
-</nav>
+  <nav class="navbar navbar-fixed-top navbar-inverse">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand">My Asthma App</a>
+        </div>
+        <div id="navbar" class="collapse navbar-collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li><a><%=usrDetails.firstName %> <%= usrDetails.lastName%></a></li>
+            <li class="active"><a href ="#" onclick="handleReturnHome()">Return</a></li>
+            <li><a href="/logout">Log Out</a></li>
+          </ul>
+          <ul class="nav navbar-nav navbar-right">
+          
+          </ul>
+        </div>
+      </div>
+    </nav>
+  <header><h3 class ="text-center"><%=pDetails.firstName %> <%= pDetails.lastName%></h3></header>
   <div id = "dataUriVal" style="visibility:hidden"><%=dataUri%></div>
+<div id = "usrDesc" style="visibility:hidden"><%= usr%></div>
+  
   <div class="newcontainer">
-  <div class="my-row special">
-  <div class="v-m">
-  <div class ="form center-block ">
-      <div class="row" id="img1" style ="overflow: hidden">
-         <img id="mamp-img" alt="Sample MyPlan Image" style="max-width:100%;max-height:100%;background-color: blue">
-      </div>
+        <div class ="form center-block ">
+          <div class="row" id="img1" style ="overflow: hidden">
+           <img id="mamp-img" alt="Sample MyPlan Image" style="max-width:100%;max-height:100%;background-color: blue">
+         </div>
          <div class="row">
-        <div class="span2 center-block"><button class="btn btn-default" id="rotate-btn" type="submit" value="rotate" />Rotate</div>
-      </div>
-      <div class="row">
-      <div class="span4"></div>
-        <div class="span4 center-block"><button class="btn btn-primary btn-lg  center-block" style="background-color: darksalmon">Triggers</button></div>
-        <div class="span4"></div>
-      </div>
-      <div class="row">
-        <div class="span2 center-block"><button class="btn btn-primary center-block"  style="background-color: orange" onclick="document.location.href='/viewPatientProfile'">Return Patient's Home</button></div>
-      </div>
-      </div>
-      </div>
+          <div class="span2 center-block"><button class="btn btn-default" id="rotate-btn" type="submit" value="rotate" />Rotate</div>
+        </div>
+        <div class="row">
+          <div class="span4"></div>
+          <div class="span4 center-block"><button class="btn btn-primary btn-lg  center-block" style="background-color: darksalmon">Triggers</button></div>
+          <div class="span4"></div>
+        </div>
       </div>
 </div>
- <script type="text/javascript">
-   (function() {
-    var imageUri= document.getElementById('dataUriVal').innerHTML;
-      if(imageUri){
-        document.getElementById('mamp-img').src = imageUri;
-      }else{
-        document.getElementById('mamp-img').innerText = "No image found to upload"
-      }
-    }());
- </script>
- <script src="static/zoomin-out-hammer-use.js"></script>
+
+<script type="text/javascript">
+var userDetails = JSON.parse(document.getElementById("usrDesc").innerHTML);
+  var role = userDetails.data.role;
+  function handleReturnHome(){
+    console.log("in handleReturnHome");
+    var destination;
+    if(role=="Patient"){
+      destination = "/home";
+    }else if(role=="Doctor"){
+      destination = "/viewPatientProfile";
+    }else{
+      destination = "/patientHome";
+    }
+    console.log("");
+         location.href = destination;
+
+  };
+ (function() {
+  var imageUri= document.getElementById('dataUriVal').innerHTML;
+  if(imageUri){
+    document.getElementById('mamp-img').src = imageUri;
+  }else{
+    document.getElementById('mamp-img').innerText = "No image found to upload"
+  }
+}());
+</script>
+<script src="static/zoomin-out-hammer-use.js"></script>
 </body>

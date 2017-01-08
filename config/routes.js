@@ -121,7 +121,8 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	app.post('/addPatient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
 		var return_output = "Success";
-		//console.log("In /addPatient req body is ", req.body);
+		console.log(req.files);
+		console.log("In /addPatient req body is ", req.body);
 		var user_email_id = req.user.data.email;
 		//console.log("user emailid ", user_email_id);
 		Guardian.findOne({'data.email':user_email_id},function(err, output) {
@@ -233,7 +234,8 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 			Patient.findOne({'data.email':req.user.data.email},function(err, output) {
 				if(err) return err;
 				userDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
-				res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails});
+				patientDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+				res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails,pDetails:patientDetails});
 				loaded = true
 			});
 			
@@ -246,13 +248,21 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		res.send("Success");
 	});
 
-	app.get('/patientHome', isLoggedIn, checkGuardianAuthorization, function(req, res) {
-		res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails});
-		loaded = true;
+	app.get('/patientHome', isLoggedIn, checkGuardianAuthorization, isPatientSelected, function(req, res) {
+		console.log("req.session.patientSelected:",req.session.patientSelected);
+		Patient.findOne({'data.email':req.session.patientSelected},function(err, output) {
+				if(err) return err;
+				patientDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+				res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails,pDetails:patientDetails});
+				loaded = true
+			});
+
+		// res.render('patientHome', {title: 'patientHome', usr: req.user,usrDetails:userDetails});
+		// loaded = true;
 	});
 
 	app.get('/fileupload', isLoggedIn, checkDoctorAuthorization, function(req, res) {
-		res.render('fileupload', {title: 'FileUpload', usr: req.user ,usrDetails:userDetails});
+		res.render('fileupload', {title: 'FileUpload', usr: JSON.stringify(req.user) ,usrDetails:userDetails,pDetails:patientDetails});
 		loaded = true;
 	});
 
@@ -289,7 +299,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		//console.log("Final patient MyPlan img path is ", patient_id_path);
 		var latest_myplan_dataUri = fs.readFileSync(patient_id_path);
 		
-		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: req.user, dataUri: latest_myplan_dataUri,usrDetails:userDetails});
+		res.render('mamp', {title: 'MyAsthmaMyPlan', usr: JSON.stringify(req.user), dataUri: latest_myplan_dataUri,usrDetails:userDetails,pDetails:patientDetails});
 		loaded = true;
 	});
 	app.post('/getFileContent', isLoggedIn, function(req, res) {
@@ -369,6 +379,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 		//res.send("Some issue with finding the patient");
 	});
+	var patientDetails;
 
 	app.get('/getPatientHistory', isLoggedIn, function(req, res){
 		var patientEmail;
@@ -389,7 +400,7 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
                 	//console.log("getting patient history");
                 	var myPlans = output.data.myPlans;
                 	//console.log(myPlans);
-                	var patientDetails= {fName:output.data.firstName,lName:output.data.lastName};
+                	patientDetails= {fName:output.data.firstName,lName:output.data.lastName};
                 	// res.send("get patient history call was successful.");
                 	res.render('MyPlanHistory', {title: 'My Plan History', usr: JSON.stringify(req.user),usrDetails:userDetails,fileDetails:JSON.stringify(myPlans),pDetails:patientDetails});
 					return;

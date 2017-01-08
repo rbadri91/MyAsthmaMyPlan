@@ -5,14 +5,35 @@
 <head>
 <title>Welcome - My Asthma My Plan</title>
 <link rel="stylesheet" href="static/stylesheets/style.css">
+<link rel="stylesheet" type="text/css" href="/static/common_layout.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
+<meta name="viewport" content="width=device-width, initial-scale=0.8" />
 <body>
 <header>
 <button id="home-button" onclick="location.href='/'">My Asthma My Plan</button>
 </header>
-<div><div class="container">
+
+<div class="new text-center">
+			<div class ="form center-block ">
+			<div class="row text-center">
+				<span class="fa fa-lock"></span></div><br>
+				<div class="row text-center"><p>Let's get started!</p><br></div>
+				<div class="row text-center">
+					<a class="btn btn-success" href="/login">
+						<span class="fa fa-user">Login</span></a>
+						<a class="btn btn-success" href="/signup"><span class="fa fa-user">Sign Up</span></a></div>
+						<div id="profile" hidden="true">
+							<a class="btn btn-default" id="Profile" href="/profile">
+								<span class="fa fa-user" id="bttn">Profile</span></a>
+							</div>
+							
+					</div>
+		</div>
+
+<!-- <div>
+<div class="container">
 <div class="jumbotron text-center">
 <span class="fa fa-lock">
 <p></p>Let's get started!<br><br>
@@ -25,7 +46,7 @@
 </div>
 </span>
 </div>
-</div>
+</div> -->
 <script>
 window.onload = function() {
 	var load = false;
@@ -35,7 +56,7 @@ window.onload = function() {
 	else document.getElementById('profile').removeAttribute("hidden");
 };
 </script>
-</div>
+<!-- </div> -->
 </body>
 <footer><p>This is a prototype. It will be prettier and more functional as time goes on.</p></footer>
 </html>
