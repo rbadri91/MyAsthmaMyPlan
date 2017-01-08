@@ -121,8 +121,6 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 
 	app.post('/addPatient', isLoggedIn, checkGuardianAuthorization, function(req, res) {
 		var return_output = "Success";
-		console.log(req.files);
-		console.log("In /addPatient req body is ", req.body);
 		var user_email_id = req.user.data.email;
 		//console.log("user emailid ", user_email_id);
 		Guardian.findOne({'data.email':user_email_id},function(err, output) {
@@ -272,8 +270,12 @@ module.exports = function(app, passport, fs, MAMP_files_path) {
 		res.send("Success");
 	});
 	app.get('/viewPatientProfile', isLoggedIn, checkDoctororGuardianAuthorization, isPatientSelected, function(req, res) {
-		res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user,usrDetails:userDetails});
-		loaded = true;
+		Patient.findOne({'data.email':req.session.patientSelected},function(err, output) {
+				if(err) return err;
+				patientDetails ={firstName:output.data.firstName,lastName:output.data.lastName};
+				res.render('viewPatientProfile', {title: 'viewPatientProfile', usr: req.user,usrDetails:userDetails,pDetails:patientDetails});
+				loaded = true
+			});
 	});
 
 	app.get('/mamp', isLoggedIn, isPatientSelected, function(req, res) {
