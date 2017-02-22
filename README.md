@@ -1,2 +1,2 @@
 # MyAsthmaMyPlan
-This is just a code sample
+This is just a code sample using Node.js
